@@ -1,0 +1,31 @@
+#!/bin/sh
+
+get_workspaces() {
+    active=$(hyprctl activewindow | grep workspace | awk '{print($2)}')
+    active_workspaces=$(hyprctl workspaces | grep workspace | awk '{print($3)}')
+
+    echo $active
+
+    ic_1=""
+    ic_2=""
+    ic_3=""
+    ic_4=""
+    ic_5=""
+    ic_6=""
+    if [ $f1 ]; then
+        ic_1=""
+    elif [ $f2 ]; then
+        ic_2=""
+    elif [ $f3 ]; then
+        ic_3=""
+    elif [ $f4 ]; then
+        ic_4=""
+    elif [ $f5 ]; then
+        ic_5=""
+    elif [ $f6 ]; then
+        ic_6=""
+    fi
+}
+
+get_workspaces
+echo $(hyprctl activewindow | grep workspace | awk '{print($2)}')

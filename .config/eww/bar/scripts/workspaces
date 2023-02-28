@@ -1,0 +1,27 @@
+#!/usr/bin/python
+
+import subprocess
+import os
+import socket
+
+def update_workspace(active_workspace):
+    icons = ["","","","","","","","","",""]
+    icons[active_workspace] = "⚪️"
+
+    prompt = f"(box :class \"works\" :spacing 5 :space-evenly false (label :text \"{icons[0]}  {icons[1]}  {icons[2]}  {icons[3]}  {icons[4]}  {icons[5]} \" ))"
+    
+    # prompt = f"(box	:class \"works\"	:orientation \"h\" :spacing 5 :space-evenly \"false\" (button :onclick \"bspc desktop -f $ws1\"	:class	\"$un$o1$f1\"	\"$ic_1\") (button :onclick \"bspc desktop -f $ws2\"	:class \"$un$o2$f2\"	 \"$ic_2\") (button :onclick \"bspc desktop -f $ws3\"	:class \"$un$o3$f3\" \"$ic_3\") (button :onclick \"bspc desktop -f $ws4\"	:class \"$un$o4$f4\"	\"$ic_4\") (button :onclick \"bspc desktop -f $ws5\"	:class \"$un$o5$f5\" \"$ic_5\")  (button :onclick \"bspc desktop -f $ws6\"	:class \"$un$o6$f6\" \"$ic_6\"))"
+
+    subprocess.run(f"echo '{prompt}'", shell=True)
+
+sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+server_address = f'/tmp/hypr/{os.environ["HYPRLAND_INSTANCE_SIGNATURE"]}/.socket2.sock'
+sock.connect(server_address)
+
+while True:
+    new_event = sock.recv(4096).decode("utf-8")
+    
+    for item in new_event.split("\n"):
+        if "workspace>>" == item[0:11]:
+            workspaces_num = item[-1]
+            update_workspace(int(workspaces_num)-1)

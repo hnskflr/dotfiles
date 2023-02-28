@@ -1,0 +1,12 @@
+#!/bin/bash
+
+## Files and cmd
+# EWW="eww -c $HOME/.config/eww/bar"
+#
+# ## Run eww daemon if not running already
+# if [[ ! `pidof eww` ]]; then
+# 	${EWW} daemon
+# 	sleep 1
+# fi
+
+eww open bar -c $HOME/.config/eww/bar/

@@ -1,0 +1,102 @@
+/* -- background: #2E3440; */
+/* -- foreground: #D8DEE9; */
+/* -- black: #3B4252; */
+/* -- red: #BF616A; */
+/* -- green: #A3BE8C; */
+/* -- yellow: #EBCB8B; */
+/* -- blue: #81A1C1; */
+/* -- magenta: #B48EAD; */
+/* -- cyan: #88C0D0; */
+/* -- white:  #D8DEE9; */
+
+* {  
+    border: none;
+    border-radius: 10px;
+    font-family: "FiraCode Nerd Font", "Font Awesome 6 Free";
+    font-size: 14px;
+    min-height: 0;
+    margin: 0 4 0 4;
+    padding: 1 0 1 0;
+    
+}
+
+window#waybar {
+    /* background-color: #3b4252; */
+    /* background-color: #2e3440; */
+    background-color: rgba(46, 52, 64, 0);
+    border-bottom: none;
+    color: #d8dee9;
+    /* transition-property: background-color; */
+    /* transition-duration: 0.5s; */
+}
+
+window#waybar.hidden {
+    opacity: 0.2;
+}
+
+#workspaces button {
+    padding: 0 0px;
+    color: #4c566a;
+    border-radius: 0px;
+}
+
+/* https://github.com/Alexays/Waybar/wiki/FAQ#the-workspace-buttons-have-a-strange-hover-effect */
+#workspaces button:hover {
+    background: rgba(0, 0, 0, 0.2);
+    box-shadow: inherit;
+    border-bottom: none;
+    border-radius: 5px;
+}
+
+#workspaces button.active {
+    /* background-color: #ebdbb2; */
+    color: #eceff4;
+    border-bottom: 2px solid #4c566a;
+    /* border-radius: 5px; */
+}
+
+#workspaces button.urgent {
+    background-color: #ebcb8b;
+}
+
+#mode {
+    background-color: #64727d;
+    border-bottom: 2px solid #ffffff;
+}
+
+#clock,
+#battery,
+#network,
+#pulseaudio,
+#mode,
+#idle_inhibitor,
+#cpu,
+#memory,
+#media,
+#disk,
+#window,
+#backlight {
+    border-radius: 0px;
+    border-bottom: 2px solid #4c566a;
+}
+
+@keyframes blink {
+    to {
+        background-color: #ebdbb2;
+        color: #282828;
+    }
+}
+
+#battery.critical:not(.charging) {
+    background-color: #282828;
+    color: #282828;
+    animation-name: blink;
+    animation-duration: 1s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+
+label:focus {
+    background-color: #000000;
+}
