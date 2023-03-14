@@ -1,0 +1,28 @@
+#!/bin/bash
+
+percent=0
+
+get_volume() {
+    percent=$(amixer -D pulse sget Master | grep 'Left:' | awk -F'[][]' '{ print $2 }' | tr -d '%')
+}
+
+icon() {
+    if [[ "$percent" -gt "75" ]]; then
+        echo " "
+    elif [[ "$percent" -gt "35" ]]; then
+        echo " "
+    elif [[ "$percent" -gt "0" ]]; then
+        echo " "
+    elif [[ "$percent" -eq "0" ]]; then
+        echo " "
+    fi
+}
+
+if [[ "$1" == "--volume" ]]; then
+    get_volume
+    echo "$percent"
+elif [[ "$1" == "--icon" ]]; then
+    get_volume
+    echo $volume
+    icon
+fi
