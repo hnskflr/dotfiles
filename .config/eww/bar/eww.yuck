@@ -144,7 +144,6 @@
                 (label
                     :text " ${battery}%")))))
 
-
 ;; MEMORY
 (defwidget mem []
 (eventbox 
