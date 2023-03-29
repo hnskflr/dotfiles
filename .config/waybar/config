@@ -1,5 +1,5 @@
 {
-  "layer": "bottom", // top / bottom
+  "layer": "top", // top / bottom
     "position": "top", // Waybar position (top|bottom|left|right)
     "height": 24, // Waybar height (to be removed for auto height)
     "width": 1900, // Waybar width
@@ -49,7 +49,6 @@
       // "timezone": "America/New_York",
       "interval": 1,
       "format": "{:%H:%M}",
-      "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
       "format-alt": "{:%Y-%m-%d %H:%M:%S}"
     },
 

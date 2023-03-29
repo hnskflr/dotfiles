@@ -1,8 +1,8 @@
 ;; Variables
 (defpoll clock_hour :interval "30m" "date +\%I")
 (defpoll clock_minute :interval "30s" "date +\%M")
-(defpoll clock_date_day :interval "12h" "date +\%d")
-(defpoll clock_date_month :interval "12h" "date +\%m")
+(defpoll clock_date_day :interval "1h" "date +\%d")
+(defpoll clock_date_month :interval "1h" "date +\%m")
 
 (defpoll volume_percent :interval "10ms" "./scripts/volume --volume")
 (defpoll volume_icon :interval "10ms" "./scripts/volume --icon")
@@ -28,7 +28,6 @@
                 :text \"           \" ))"
     "scripts/workspaces")
 
-(defvar eww "eww -c $HOME/.config/eww/bar")
 (defvar vol_reveal false)
 (defvar br_reveal false)
 (defvar music_reveal false)
@@ -57,8 +56,8 @@
 ;; CLOCK / DATE
 (defwidget clock_module []
   (eventbox 
-    :onhover "${eww} update time_rev=true"
-	:onhoverlost "${eww} update time_rev=false"
+    :onhover "${EWW_CMD} update time_rev=true"
+	:onhoverlost "${EWW_CMD} update time_rev=false"
     (box 
         :class "module" 
         :space-evenly "false" 
@@ -94,35 +93,38 @@
 
 ;; WIFI
 (defwidget wifi []
-  (eventbox 
-    :onhover "${eww} update wifi_rev=true"
-	:onhoverlost "${eww} update wifi_rev=false"
-	(box 
-        :vexpand "false" 
-        :hexpand "false" 
+(eventbox 
+    :onhover "${EWW_CMD} update wifi_rev=true"
+    :onhoverlost "${EWW_CMD} update wifi_rev=false"
+    (box 
+        :space-evenly "false" 
+        :orientation "h" 
+        :spacing "3"
         :space-evenly "false"
-		    (button 
-                :class "wifi" 
-                :wrap "false"  
-                (box
+  	    (button 
+            :class "wifi" 
+            (box
+                (label 
+                    :class "wifi-icon" 
+                    :text WLAN_ICON)
+                (revealer 
+                    :transition "slideleft" 
+                    :reveal wifi_rev
+                    :duration "350ms"
                     (label 
-                        :class "wifi-icon" 
-                        :text WLAN_ICON)
-                    (revealer 
-                        :transition "slideleft" 
-                        :reveal wifi_rev
-                        :duration "350ms"
-                        (label 
-                            :text ESSID_WLAN 
-                            :limit-width 12)))))))
+                        :text ESSID_WLAN 
+                        :limit-width 12)))))))
 
 ;; BATTERY
 (defwidget bat []
 (eventbox 
-    :onhover "${eww} update bat_rev=true"
-	:onhoverlost "${eww} update bat_rev=false"
+    :onhover "${EWW_CMD} update bat_rev=true"
+	:onhoverlost "${EWW_CMD} update bat_rev=false"
 	(box 
         :class "bat_module"
+        :space-evenly "false" 
+        :orientation "h" 
+        :spacing "3"
         (circular-progress 
             :value battery
             :class "batbar"
@@ -145,28 +147,38 @@
 
 ;; MEMORY
 (defwidget mem []
-(box 
-    :class "mem_module" 
-    :vexpand "false" 
-    :hexpand "false" 
-    (circular-progress 
-        :value memory
-        :class "membar"
-        :thickness 2
-        (button 
-            :class "iconmem"
-            :limit-width 2
-            :tooltip "using ${memory}% ram"
-            :onclick "$HOME/.config/eww/bar/scripts/pop system"
-            :show_truncated false
-            :wrap false
-            ""))))
+(eventbox 
+    :onhover "${EWW_CMD} update mem_rev=true"
+	:onhoverlost "${EWW_CMD} update mem_rev=false"
+    (box 
+        :class "mem_module" 
+        :space-evenly "false" 
+        :orientation "h" 
+        :spacing "3"
+        (circular-progress 
+            :value memory
+            :class "membar"
+            :thickness 2
+            (button 
+                :class "iconmem"
+                :limit-width 2
+                :tooltip "using ${memory}% ram"
+                :onclick "$HOME/.config/eww/bar/scripts/pop system"
+                :show_truncated false
+                :wrap false
+                ""))
+            (revealer 
+                :transition "slideleft"
+                :reveal mem_rev
+                :duration "350ms"
+                (label
+                    :text " ${memory}%")))))
   
 ;; VOLUME
 (defwidget volume []
 (eventbox 
-    :onhover "${eww} update vol_reveal=true"
-	:onhoverlost "${eww} update vol_reveal=false"
+    :onhover "${EWW_CMD} update vol_reveal=true"
+	:onhoverlost "${EWW_CMD} update vol_reveal=false"
     (box 
         :class "module-2" 
         :space-evenly "false" 
@@ -190,8 +202,8 @@
 ;; BRIGHTNESS
 (defwidget bright []
 (eventbox 
-    :onhover "${eww} update br_reveal=true" 
-    :onhoverlost "${eww} update br_reveal=false"
+    :onhover "${EWW_CMD} update br_reveal=true" 
+    :onhoverlost "${EWW_CMD} update br_reveal=false"
     (box 
         :class "module-2" 
         :space-evenly "false" 

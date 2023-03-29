@@ -1,0 +1,24 @@
+#!/usr/bin/python
+
+import subprocess
+import os
+import socket
+
+def get_workspaces():
+    cmd = "hyprctl workspaces | grep workspace | awk '{print($3)}'"
+    print(subprocess.getoutput(cmd))
+    print()
+    # workspaces = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+    # print(workspaces.stdout.read())
+
+sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+server_address = f'/tmp/hypr/{os.environ["HYPRLAND_INSTANCE_SIGNATURE"]}/.socket2.sock'
+sock.connect(server_address)
+
+while True:
+    new_event = sock.recv(4096).decode("utf-8")
+    
+    for item in new_event.split("\n"):
+        if "workspace>>" == item[0:11]:
+            workspaces_num = item[-1]
+            get_workspaces()

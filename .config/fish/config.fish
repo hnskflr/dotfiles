@@ -9,6 +9,8 @@ alias lt="ls --tree"
 
 alias s="kitty +kitten ssh"
 
+alias q="qalc"
+
 function f
     fff $argv
     set -q XDG_CACHE_HOME; or set XDG_CACHE_HOME $HOME/.cache
