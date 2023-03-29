@@ -1,3 +1,3 @@
 # Laptop Dotfiles
 
-[[.config/screenshot.png]]
+![Screenshot](.config/screenshot.png)
