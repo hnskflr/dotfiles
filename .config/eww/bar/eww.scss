@@ -1,6 +1,5 @@
 $background: #2E3440;
 $foreground: #D8DEE9;
-
 $black: #3B4252;
 $red: #BF616A;
 $green: #A3BE8C;
@@ -24,24 +23,11 @@ $white: $foreground;
 }
 .module {
     margin: 0px 0px 0px 0px;
-    border-radius: 10px 16px 0px 10px;
+    border-radius: 0px 0px 0px 0px;
 }
-
-/** tooltip!! **/
-tooltip.background {
-    background-color: $background;
-    font-size: 15;
-    // border-radius: 10px;
-}
-
-tooltip label {
-    margin: 6px;
-}
-
 
 /** Widgets **/
 .clock_time_sep, .clock_date_sep {
-    // font-size: 15;
     margin: 0px 2px 0px 2px;
 }
 .clock_minute_class {
@@ -56,10 +42,6 @@ tooltip label {
 .membar {
     color: $yellow;
     background-color: $black;
-    // border-radius: 10px;
-}
-.mem_module {
-    margin: 0px 10px 0px 3px;
 }
 .iconmem {
     color: $yellow;
@@ -68,18 +50,30 @@ tooltip label {
 .batbar {
     color: $green;
     background-color: $black;
-    // border-radius: 1px;
-}
-.bat_module {
-    margin: 0px 10px 0px 10px;
 }
 .iconbat {
     color: $green;
 }
 
-.iconbat, .iconmem {
+.cpubar {
+    color: $magenta;
+    background-color: $black;
+}
+
+.iconcpu {
+    color: $magenta;
+}
+
+.mem_module, .cpu_module {
+    margin: 0px 0px 0px 15px;
+}
+.iconbat, .iconmem, .iconcpu {
     font-size: 10;
     margin: 7px;
+}
+
+.val-text {
+    margin: 0px 15px 0px 15px;
 }
 
 .brightbar trough highlight {
@@ -91,7 +85,7 @@ tooltip label {
     font-family: "Material Icons";
     font-size: 15;
     color: $yellow;
-    margin: 0px 10px 0px 10px;
+    margin: 0px 15px 0px 0px;
 }
 .bright {
     color: $yellow;
@@ -105,19 +99,24 @@ tooltip label {
     font-family: "Material Icons";
     font-size: 15;
     color: $blue;
-    margin: 0px 10px 0px 10px;
+    margin: 0px 15px 0px 0px;
 }
 
 .wifi {
-    font-size: 15;
+    // font-size: 15;
     color: $blue;
-    border-radius: 100%;
-    // margin: 0px 0px 0px 5px;
+    border-radius: 10px;
+    // margin: 0px 15px 0px 15px;
 }
 .wifi-icon {
     font-family: "Material Icons";
+    font-size: 15;
+    color: $blue;
+    margin: 0px 15px 0px 0px;
 }
-
+.wifi-text {
+    margin: 0px 15px 0px 0px;
+}
 
 
 .separ {
@@ -141,52 +140,5 @@ scale trough {
 .works {
     // font-size: 15px;
     // font-weight: normal;
-    margin: 10px 0px 0px 8px;
-}
-
-// Calendar
-.cal {
-    // font-family: JetBrainsMono Nerd Font;
-    font-size: 15px;
-    font-weight: normal;
-
-    .cal-in {
-        padding: 0px 10px 0px 10px;
-        color: $foreground;
-        background-color: $background;
-
-        .cal {
-            &.highlight {
-                padding: 20px;
-            }
-
-            padding: 5px 5px 5px 5px;
-            margin-left: 10px;
-        }
-    }
-}
-
-calender {
-    color: #bfc9db;
-}
-calendar:selected {
-    color: #a1bdce;
-}
-
-calendar.header {
-    color: #a1bdce;
-    font-weight: bold;
-}
-
-calendar.button {
-    color: #afbea2;
-}
-
-calendar.highlight {
-    color: #a1bdce;
-    font-weight: bold;
-}
-
-calendar:indeterminate {
-    color: #bfc9db;
+    margin: 0px 0px 0px 0px;
 }

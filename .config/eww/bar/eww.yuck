@@ -12,20 +12,13 @@
 (defpoll battery :interval "30s" "./scripts/battery --bat")
 (defpoll battery_status :interval "1m" "./scripts/battery --bat-st")
 
-(defpoll memory :interval "1s" "scripts/memory")
+(defpoll memory :interval "5s" "scripts/memory")
+(defpoll cpu :interval "5s" "scripts/cpu")
 
-(defpoll COL_WLAN :interval "1s" "./scripts/wifi --color")
-(defpoll ESSID_WLAN :interval "1s" "~/.config/eww/bar/scripts/wifi --essid")
+(defpoll ESSID_WLAN :interval "5s" "~/.config/eww/bar/scripts/wifi --essid")
 (defpoll WLAN_ICON :interval "1s" "~/.config/eww/bar/scripts/wifi --icon")
 
 (deflisten workspace 
-    :initial 
-        "(box 
-            :class \"works\" 
-            :spacing 5 
-            :space-evenly false 
-            (label 
-                :text \"\" ))"
     "scripts/workspaces")
 
 (defvar vol_reveal false)
@@ -35,14 +28,10 @@
 (defvar time_rev false)
 (defvar bat_rev false)
 (defvar mem_rev false)
+(defvar cpu_rev false)
 
 
 ;; WIDGETS
-;; WORKSPACES
-(defwidget workspaces[]
-    (literal  
-        :content workspace))
-
 ;; SEPARATOR
 (defwidget sep []
   (box 
@@ -52,6 +41,11 @@
     (label 
         :class "separ" 
         :text "|")))
+
+;; WORKSPACES
+(defwidget workspaces[]
+    (literal  
+        :content workspace))
 
 ;; CLOCK / DATE
 (defwidget clock_module []
@@ -97,96 +91,36 @@
     :onhover "${EWW_CMD} update wifi_rev=true"
     :onhoverlost "${EWW_CMD} update wifi_rev=false"
     (box 
-        :space-evenly "false" 
         :orientation "h" 
         :spacing "3"
         :space-evenly "false"
-  	    (button 
-            :class "wifi" 
-            (box
-                (label 
-                    :class "wifi-icon" 
-                    :text WLAN_ICON)
-                (revealer 
-                    :transition "slideleft" 
-                    :reveal wifi_rev
-                    :duration "350ms"
-                    (label 
-                        :text ESSID_WLAN 
-                        :limit-width 12)))))))
+        (label 
+            :class "wifi-icon" 
+            :text WLAN_ICON)
+        (revealer 
+            :transition "slideleft" 
+            :reveal wifi_rev
+            :duration "350ms"
+            :class "wifi"
+            (label
+                :class "wifi-text"
+                :text ESSID_WLAN 
+                :limit-width 12)))))
 
-;; BATTERY
-(defwidget bat []
-(eventbox 
-    :onhover "${EWW_CMD} update bat_rev=true"
-	:onhoverlost "${EWW_CMD} update bat_rev=false"
-	(box 
-        :class "bat_module"
-        :space-evenly "false" 
-        :orientation "h" 
-        :spacing "3"
-        (circular-progress 
-            :value battery
-            :class "batbar"
-            :thickness 2
-            (button 
-                :class "iconbat"
-                :limit-width 2
-                :tooltip "battery on ${battery}%"
-                :show_truncated false
-                :onclick "$HOME/.config/eww/bar/scripts/pop system"
-                :wrap false
-                ""))
-            (revealer 
-                :transition "slideleft"
-                :reveal bat_rev
-                :duration "350ms"
-                (label
-                    :text " ${battery}%")))))
-
-;; MEMORY
-(defwidget mem []
-(eventbox 
-    :onhover "${EWW_CMD} update mem_rev=true"
-	:onhoverlost "${EWW_CMD} update mem_rev=false"
-    (box 
-        :class "mem_module" 
-        :space-evenly "false" 
-        :orientation "h" 
-        :spacing "3"
-        (circular-progress 
-            :value memory
-            :class "membar"
-            :thickness 2
-            (button 
-                :class "iconmem"
-                :limit-width 2
-                :tooltip "using ${memory}% ram"
-                :onclick "$HOME/.config/eww/bar/scripts/pop system"
-                :show_truncated false
-                :wrap false
-                ""))
-            (revealer 
-                :transition "slideleft"
-                :reveal mem_rev
-                :duration "350ms"
-                (label
-                    :text " ${memory}%")))))
-  
 ;; VOLUME
 (defwidget volume []
 (eventbox 
     :onhover "${EWW_CMD} update vol_reveal=true"
 	:onhoverlost "${EWW_CMD} update vol_reveal=false"
     (box 
-        :class "module-2" 
         :space-evenly "false" 
         :orientation "h" 
         :spacing "3" 
 	    (button   
             :onclick "scripts/pop audio"
             :class "volume_icon" "${volume_icon}")
-	    (revealer :transition "slideleft"
+	    (revealer 
+            :transition "slideleft"
 		    :reveal vol_reveal
 			:duration "350ms"
 	        (scale    
@@ -224,8 +158,96 @@
 			    :min 0
 			    :onchange "brightnessctl set {}%" )))))
 
+;; BATTERY
+(defwidget bat []
+(eventbox 
+    :onhover "${EWW_CMD} update bat_rev=true"
+	:onhoverlost "${EWW_CMD} update bat_rev=false"
+	(box 
+        :class "bat_module"
+        :space-evenly "false" 
+        :orientation "h" 
+        :spacing "3"
+        (circular-progress 
+            :value battery
+            :class "batbar"
+            :thickness 2
+            (button 
+                :class "iconbat"
+                :limit-width 2
+                :tooltip "battery on ${battery}%"
+                :show_truncated false
+                :onclick "$HOME/.config/eww/bar/scripts/pop system"
+                :wrap false
+                ""))
+            (revealer 
+                :transition "slideleft"
+                :reveal bat_rev
+                :duration "350ms"
+                (label
+                    :class "val-text"
+                    :text "${battery}%")))))
 
-;; BAR SETUP
+;; MEMORY
+(defwidget mem []
+(eventbox 
+    :onhover "${EWW_CMD} update mem_rev=true"
+	:onhoverlost "${EWW_CMD} update mem_rev=false"
+    (box 
+        :class "mem_module" 
+        :space-evenly "false" 
+        :orientation "h" 
+        :spacing "3"
+        (circular-progress 
+            :value memory
+            :class "membar"
+            :thickness 2
+            (button 
+                :class "iconmem"
+                :limit-width 2
+                :tooltip "using ${memory}% ram"
+                :onclick "$HOME/.config/eww/bar/scripts/pop system"
+                :show_truncated false
+                :wrap false
+                ""))
+            (revealer 
+                :transition "slideleft"
+                :reveal mem_rev
+                :duration "350ms"
+                (label
+                    :class "val-text"
+                    :text "${memory}%")))))
+
+;; MEMORY
+(defwidget cpu []
+(eventbox 
+    :onhover "${EWW_CMD} update cpu_rev=true"
+	:onhoverlost "${EWW_CMD} update cpu_rev=false"
+    (box 
+        :class "cpu_module" 
+        :space-evenly "false" 
+        :orientation "h" 
+        :spacing "3"
+        (circular-progress 
+            :value cpu
+            :class "cpubar"
+            :thickness 2
+            (button 
+                :class "iconcpu"
+                :limit-width 2
+                :tooltip "using ${cpu}% cpu"
+                :show_truncated false
+                :wrap false
+                ""))
+            (revealer 
+                :transition "slideleft"
+                :reveal cpu_rev
+                :duration "350ms"
+                (label  
+                    :class "val-text"
+                    :text "${cpu}%")))))
+
+;; BAR
 (defwidget right []
 (box 
     :orientation "h" 
@@ -236,8 +258,8 @@
     (volume)
     (bright)
     (bat)
-    (mem)))
-
+    (mem)
+    (cpu)))
 
 (defwidget left []
 (box 
@@ -246,7 +268,6 @@
     :halign "start"
 	:class "left_modules"
     (workspaces)))
-
 
 (defwidget center []
 (box 
@@ -263,8 +284,8 @@
         (geometry 
             :x "0%"
             :y "0%"
-            :width "100%"
-            :height "1%"
+            :width "98%"
+            :height "0%"
             :anchor "top center")
         :stacking "bg"
         :exclusive true

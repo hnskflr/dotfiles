@@ -1,12 +1,22 @@
 #!/bin/bash
 
 percent=0
+muted="on"
 
 get_volume() {
     percent=$(amixer -D pulse sget Master | grep 'Left:' | awk -F'[][]' '{ print $2 }' | tr -d '%')
 }
 
-icon() {
+get_muted() {
+    muted=$(amixer -D pulse sget Master | grep 'Left:' | awk -F'[][]' '{ print $4 }')
+}
+
+get_icon() {
+    if [[ "$muted" == "off" ]]; then
+        echo " "
+        return
+    fi
+
     if [[ "$percent" -gt "75" ]]; then
         echo " "
     elif [[ "$percent" -gt "35" ]]; then
@@ -14,15 +24,17 @@ icon() {
     elif [[ "$percent" -gt "0" ]]; then
         echo " "
     elif [[ "$percent" -eq "0" ]]; then
-        echo " "
+        echo " "
     fi
 }
 
 if [[ "$1" == "--volume" ]]; then
     get_volume
+    get_muted
     echo "$percent"
+
 elif [[ "$1" == "--icon" ]]; then
     get_volume
-    echo $volume
-    icon
+    get_muted
+    get_icon
 fi
