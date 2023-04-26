@@ -18,8 +18,10 @@
 (defpoll ESSID_WLAN :interval "5s" "~/.config/eww/bar/scripts/wifi --essid")
 (defpoll WLAN_ICON :interval "1s" "~/.config/eww/bar/scripts/wifi --icon")
 
-(deflisten workspace 
-    "scripts/workspaces")
+;; (deflisten workspace "scripts/workspaces")
+
+(deflisten workspaces :initial "[]" "sh ~/.config/eww/bar/scripts/get-workspaces")
+(deflisten current_workspace :initial "1" "sh ~/.config/eww/bar/scripts/get-active-workspace")
 
 (defvar vol_reveal false)
 (defvar br_reveal false)
@@ -43,47 +45,67 @@
         :text "|")))
 
 ;; WORKSPACES
+;; (defwidget workspaces[]
+    ;; (literal  
+        ;; :content workspace))
+
 (defwidget workspaces[]
-    (literal  
-        :content workspace))
+    (eventbox 
+        :onscroll "sh ~/.config/eww/bar/scripts/change-active-workspace {} ${current_workspace}" 
+        (box 
+            :space-evenly true
+            :class "works"
+            (for workspace in workspaces
+                (eventbox 
+                    :onclick "hyprctl dispatch workspace ${workspace.id}"
+                    (box 
+                        :class "workspace-entry ${workspace.id == current_workspace ? "workspace-current" : "workspace"}"
+                        (label 
+                            :text "${workspace.id == current_workspace ? "" : ""}")
+                    )
+                )
+            )
+        )
+    )
+)
 
 ;; CLOCK / DATE
 (defwidget clock_module []
-  (eventbox 
-    :onhover "${EWW_CMD} update time_rev=true"
-	:onhoverlost "${EWW_CMD} update time_rev=false"
-    (box 
-        :class "module" 
-        :space-evenly "false" 
-        :orientation "h" 
-        :spacing "3" 
-      (label 
-        :text clock_hour 
-        :class "clock_hour_class" )
-      (label 
-        :text ":" 
-        :class "clock_time_sep" )
-      (label 
-        :text clock_minute 
-        :class "clock_minute_class")
-	  (revealer 
-        :transition "slideleft"
-		:reveal time_rev
-		:duration "350ms"
-        (button 
-            :class "clock_date_class"
-            :onclick "scripts/pop calendar"
-            (box
-                (sep)
-                (label 
-                    :text clock_date_day 
-                    :class "clock_date_day")
-                (label 
-                    :text "/" 
-                    :class "clock_date_sep")
-                (label 
-                    :text clock_date_month 
-                    :class "clock_date_month")))))))
+    (eventbox 
+        :onhover "${EWW_CMD} update time_rev=true"
+	    :onhoverlost "${EWW_CMD} update time_rev=false"
+        (box 
+            :class "module" 
+            :space-evenly "false" 
+            :orientation "h" 
+            :spacing "3" 
+        (label 
+            :text clock_hour 
+            :class "clock_hour_class" )
+        (label 
+            :text ":" 
+            :class "clock_time_sep" )
+        (label 
+            :text clock_minute 
+            :class "clock_minute_class")
+	    (revealer 
+            :transition "slideleft"
+	    	:reveal time_rev
+	    	:duration "350ms"
+            (button 
+                :class "clock_date_class"
+                :onclick "scripts/pop calendar"
+                (box
+                    (sep)
+                    (label 
+                        :text clock_date_day 
+                        :class "clock_date_day")
+                    (label 
+                        :text "/" 
+                        :class "clock_date_sep")
+                    (label 
+                        :text clock_date_month 
+                        :class "clock_date_month")))))))
 
 ;; WIFI
 (defwidget wifi []
