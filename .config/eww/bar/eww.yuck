@@ -7,7 +7,8 @@
 (defpoll volume_percent :interval "10ms" "./scripts/volume --volume")
 (defpoll volume_icon :interval "10ms" "./scripts/volume --icon")
 
-(defpoll brightness_percent :interval "100ms" "brightnessctl -m -d amdgpu_bl0 | awk -F, '{print substr($4, 0, length($4)-1)}' | tr -d '%'")
+;; (defpoll brightness_percent :interval "100ms" "brightnessctl -m -d amdgpu_bl0 | awk -F, '{print substr($4, 0, length($4)-1)}' | tr -d '%'")
+(defpoll brightness_percent :interval "100ms" "light")
 
 (defpoll battery :interval "30s" "./scripts/battery --bat")
 (defpoll battery_status :interval "1m" "./scripts/battery --bat-st")
@@ -192,10 +193,10 @@
         :spacing "3"
         (circular-progress 
             :value battery
-            :class "batbar"
+            :class "${battery} < 20 ? batbar-low : batbar"
             :thickness 2
             (button 
-                :class "iconbat"
+                :class "${battery} < 20 ? iconbat-low : iconbat"
                 :limit-width 2
                 :tooltip "battery on ${battery}%"
                 :show_truncated false

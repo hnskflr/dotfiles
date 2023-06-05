@@ -51,8 +51,15 @@ $white: $foreground;
     color: $green;
     background-color: $black;
 }
+.batbar-low {
+    color: $red;
+    background-color: $black;
+}
 .iconbat {
     color: $green;
+}
+.iconbat-low {
+    color: $red;
 }
 
 .cpubar {

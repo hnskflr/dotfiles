@@ -4,15 +4,15 @@ percent=0
 muted="on"
 
 get_volume() {
-    percent=$(amixer -D pulse sget Master | grep 'Left:' | awk -F'[][]' '{ print $2 }' | tr -d '%')
+    percent=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{ print $2*100 }')
 }
 
 get_muted() {
-    muted=$(amixer -D pulse sget Master | grep 'Left:' | awk -F'[][]' '{ print $4 }')
+    muted=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{ print $3 }')
 }
 
 get_icon() {
-    if [[ "$muted" == "off" ]]; then
+    if [[ "$muted" == "[MUTED]" ]]; then
         echo " "
         return
     fi
