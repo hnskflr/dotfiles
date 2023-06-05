@@ -281,12 +281,14 @@
     # Otherwise the "#" and following would be interpreted as a comment.
     background = "#2e3440"
     foreground = "#D8DEE9"
+    highlight = "#81a1c1"
     timeout = 7
     # Icon for notifications with low urgency, uncomment to enable
 
 [urgency_normal]
     background = "#2e3440"
     foreground = "#D8DEE9"
+    highlight = "#81a1c1"
     timeout = 7
     # Icon for notifications with normal urgency, uncomment to enable
 
@@ -294,6 +296,7 @@
     background = "#2e3440"
     foreground = "#D8DEE9"
     frame_color = "#bf616a"
+    highlight = "#bf616a"
     timeout = 0
     # Icon for notifications with critical urgency, uncomment to enable
 
