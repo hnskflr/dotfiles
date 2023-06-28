@@ -4,7 +4,7 @@ percent=0
 muted="on"
 
 get_volume() {
-    percent=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{ print $2*100 }')
+    percent=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{ print int(($2/1.5)*100) }')
 }
 
 get_muted() {

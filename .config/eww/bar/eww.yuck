@@ -1,32 +1,45 @@
-;; Variables
-(defpoll clock_hour :interval "30m" "date +\%I")
-(defpoll clock_minute :interval "30s" "date +\%M")
-(defpoll clock_date_day :interval "1h" "date +\%d")
-(defpoll clock_date_month :interval "1h" "date +\%m")
-
-(defpoll volume_percent :interval "10ms" "./scripts/volume --volume")
-(defpoll volume_icon :interval "10ms" "./scripts/volume --icon")
-
-;; (defpoll brightness_percent :interval "100ms" "brightnessctl -m -d amdgpu_bl0 | awk -F, '{print substr($4, 0, length($4)-1)}' | tr -d '%'")
-(defpoll brightness_percent :interval "100ms" "light")
-
-(defpoll battery :interval "30s" "./scripts/battery --bat")
-(defpoll battery_status :interval "1m" "./scripts/battery --bat-st")
-
-(defpoll memory :interval "5s" "scripts/memory")
-(defpoll cpu :interval "5s" "scripts/cpu")
-
-(defpoll ESSID_WLAN :interval "5s" "~/.config/eww/bar/scripts/wifi --essid")
-(defpoll WLAN_ICON :interval "1s" "~/.config/eww/bar/scripts/wifi --icon")
-
-;; (deflisten workspace "scripts/workspaces")
-
+;; VARIABLES
+;; workspaces
 (deflisten workspaces :initial "[]" "sh ~/.config/eww/bar/scripts/get-workspaces")
 (deflisten current_workspace :initial "1" "sh ~/.config/eww/bar/scripts/get-active-workspace")
 
+;; time
+(defpoll clock_hour :interval "1m" "date +\%I")
+(defpoll clock_minute :interval "1s" "date +\%M")
+(defpoll clock_date_day :interval "1h" "date +\%d")
+(defpoll clock_date_month :interval "1h" "date +\%m")
+
+;; music 
+(defpoll song :interval "1s" "~/.config/eww/bar/scripts/music --song")
+(defpoll artist :interval "1s" "~/.config/eww/bar/scripts/music --artist")
+(defpoll album :interval "1s" "~/.config/eww/bar/scripts/music --album")
+(defpoll music_status :interval "1m" "~/.config/eww/bar/scripts/music --status")
+
+;; wifi
+(defpoll ESSID_WLAN :interval "2s" "~/.config/eww/bar/scripts/wifi --essid")
+(defpoll WLAN_ICON :interval "1s" "~/.config/eww/bar/scripts/wifi --icon")
+
+;; volume
+(defpoll volume_percent :interval "1s" "./scripts/volume --volume")
+(defpoll volume_icon :interval "1s" "./scripts/volume --icon")
+
+;; brightness
+(defpoll brightness_percent :interval "1s" "light")
+
+;; battery
+(defpoll battery :interval "30s" "./scripts/battery --bat")
+(defpoll battery_status :interval "10s" "./scripts/battery --bat-st")
+
+;; memory
+(defpoll memory :interval "2s" "scripts/memory")
+
+;; cpu
+(defpoll cpu :interval "2s" "scripts/cpu")
+
+;; REVEALERS
 (defvar vol_reveal false)
 (defvar br_reveal false)
-(defvar music_reveal false)
+(defvar music_rev false)
 (defvar wifi_rev false)
 (defvar time_rev false)
 (defvar bat_rev false)
@@ -62,14 +75,31 @@
                     (box 
                         :class "workspace-entry ${workspace.id == current_workspace ? "workspace-current" : "workspace"}"
                         (label 
-                            :text "${workspace.id == current_workspace ? "" : ""}")
-                    )
-                )
-            )
-        )
-    )
-)
+                            :text "${workspace.id == current_workspace ? "" : ""}")))))))
 
+;; MUSIC
+(defwidget music []
+    (eventbox
+        :onclick "~/.config/eww/bar/scripts/music --toggle && ${EWW_CMD} update music_status=${music_status == 'Playing' ? '' : 'Playing'}"
+        :onhover "${EWW_CMD} update music_rev=true"
+        :onhoverlost "${EWW_CMD} update music_rev=false"
+        (box
+            :class "music"
+            :spacing "10"
+            :space-evenly false
+            :limit-width 5
+            (label
+                :text "${music_status == 'Playing' ? '||' : '|>'}")
+            (label
+                :text song)
+            (revealer 
+                :transition "slideleft" 
+                :reveal music_rev
+                :duration "350ms"
+                (label
+                    :text " - ${artist}")))))
+        
+  
 ;; CLOCK / DATE
 (defwidget clock_module []
     (eventbox 
@@ -193,10 +223,10 @@
         :spacing "3"
         (circular-progress 
             :value battery
-            :class "${battery} < 20 ? batbar-low : batbar"
+            :class {battery <= 20 ? "batbar-low" : "batbar"}
             :thickness 2
             (button 
-                :class "${battery} < 20 ? iconbat-low : iconbat"
+                :class "iconbat"
                 :limit-width 2
                 :tooltip "battery on ${battery}%"
                 :show_truncated false
@@ -241,7 +271,7 @@
                     :class "val-text"
                     :text "${memory}%")))))
 
-;; MEMORY
+;; CPU
 (defwidget cpu []
 (eventbox 
     :onhover "${EWW_CMD} update cpu_rev=true"
@@ -298,6 +328,8 @@
 	:space-evenly false  
     :halign "center"
 	:class "center_modules"
+    :spacing 10
+    (music)
     (clock_module)))
 
 ;; BAR
@@ -306,7 +338,7 @@
     :geometry
         (geometry 
             :x "0%"
-            :y "0%"
+            :y "7"
             :width "98%"
             :height "0%"
             :anchor "top center")
