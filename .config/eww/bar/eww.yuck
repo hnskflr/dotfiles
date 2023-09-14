@@ -13,7 +13,7 @@
 (defpoll song :interval "1s" "~/.config/eww/bar/scripts/music --song")
 (defpoll artist :interval "1s" "~/.config/eww/bar/scripts/music --artist")
 (defpoll album :interval "1s" "~/.config/eww/bar/scripts/music --album")
-(defpoll music_status :interval "1m" "~/.config/eww/bar/scripts/music --status")
+(defpoll music_status :interval "5s" "~/.config/eww/bar/scripts/music --status")
 
 ;; wifi
 (defpoll ESSID_WLAN :interval "2s" "~/.config/eww/bar/scripts/wifi --essid")
