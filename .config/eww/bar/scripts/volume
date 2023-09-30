@@ -13,18 +13,18 @@ get_muted() {
 
 get_icon() {
     if [[ "$muted" == "[MUTED]" ]]; then
-        echo " "
+        echo "󰝟 "
         return
     fi
 
     if [[ "$percent" -gt "75" ]]; then
-        echo " "
+        echo "󰕾 "
     elif [[ "$percent" -gt "35" ]]; then
-        echo " "
+        echo "󰖀 "
     elif [[ "$percent" -gt "0" ]]; then
-        echo " "
+        echo "󰕿 "
     elif [[ "$percent" -eq "0" ]]; then
-        echo " "
+        echo "󰝟 "
     fi
 }
 

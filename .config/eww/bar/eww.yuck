@@ -20,15 +20,15 @@
 (defpoll WLAN_ICON :interval "1s" "~/.config/eww/bar/scripts/wifi --icon")
 
 ;; volume
-(defpoll volume_percent :interval "1s" "./scripts/volume --volume")
-(defpoll volume_icon :interval "1s" "./scripts/volume --icon")
+(defpoll volume_percent :interval "1s" "scripts/volume --volume")
+(defpoll volume_icon :interval "1s" "scripts/volume --icon")
 
 ;; brightness
 (defpoll brightness_percent :interval "1s" "light")
 
 ;; battery
-(defpoll battery :interval "30s" "./scripts/battery --bat")
-(defpoll battery_status :interval "10s" "./scripts/battery --bat-st")
+(defpoll battery_percent :interval "30s" "scripts/battery --bat")
+(defpoll battery_status :interval "10s" "scripts/battery --bat-st")
 
 ;; memory
 (defpoll memory :interval "2s" "scripts/memory")
@@ -75,7 +75,7 @@
                     (box 
                         :class "workspace-entry ${workspace.id == current_workspace ? "workspace-current" : "workspace"}"
                         (label 
-                            :text "${workspace.id == current_workspace ? "" : ""}")))))))
+                            :text "${workspace.id == current_workspace ? "" : "○"}")))))))
 
 ;; MUSIC
 (defwidget music []
@@ -89,7 +89,7 @@
             :space-evenly false
             :limit-width 5
             (label
-                :text "${music_status == 'Playing' ? '||' : '|>'}")
+                :text "${music_status == 'Playing' ? '⏸' : '⏵'}")
             (label
                 :text song)
             (revealer 
@@ -196,7 +196,7 @@
         :orientation "h" 
         :spacing "3" 
         (label 
-            :text "☀" 
+            :text "󰃠" 
             :class "bright_icon" 
             :tooltip "brightness")
 	    (revealer :transition "slideleft"
@@ -222,13 +222,13 @@
         :orientation "h" 
         :spacing "3"
         (circular-progress 
-            :value battery
-            :class {battery <= 20 ? "batbar-low" : "batbar"}
+            :value battery_percent
+            :class {battery_percent <= 20 ? "batbar-low" : "batbar"}
             :thickness 2
             (button 
                 :class "iconbat"
                 :limit-width 2
-                :tooltip "battery on ${battery}%"
+                :tooltip "battery on ${battery_percent}%"
                 :show_truncated false
                 :onclick "$HOME/.config/eww/bar/scripts/pop system"
                 :wrap false
@@ -239,7 +239,7 @@
                 :duration "350ms"
                 (label
                     :class "val-text"
-                    :text "${battery}%")))))
+                    :text "${battery_percent}%")))))
 
 ;; MEMORY
 (defwidget mem []
