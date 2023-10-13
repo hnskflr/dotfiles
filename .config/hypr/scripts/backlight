@@ -1,0 +1,13 @@
+#!/bin/sh
+
+if [ "$1" == "inc" ]; then
+    opt="-A"
+else
+    opt="-U"
+fi
+
+light "$opt" 2%
+
+brightness=$(light)
+
+dunstify -h string:x-dunst-stack-tag:brightness "Brightness: " -h "int:value:$brightness"

@@ -1,0 +1,28 @@
+#!/bin/sh
+
+notify_volume() {
+    val=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{ print int(($2/1.5)*100) }')
+    dunstify -h string:x-dunst-stack-tag:volume "Volume ($val%):" -h "int:value:$val"
+}
+
+if [ "$1" == "mute" ]; then
+
+    wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+    
+    muted=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{ print $3 }')
+    if [[ "$muted" == "[MUTED]" ]]; then
+        dunstify -h string:x-dunst-stack-tag:volume "Volume:" "Muted"
+    else
+        notify_volume
+    fi
+
+else
+
+    if [ "$1" == "inc" ]; then
+        wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%+
+    else
+        wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-
+    fi
+    
+    notify_volume
+fi
