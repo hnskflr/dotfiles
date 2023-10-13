@@ -1,0 +1,46 @@
+#! /bin/bash
+
+get_song() {
+    playerctl metadata --format "{{ title }}"   
+}
+
+get_artist() {
+    playerctl metadata --format "{{ artist }}"
+}
+
+get_album() {
+    playerctl metadata --format "{{ album }}"
+}
+
+get_status() {
+    playerctl status
+}
+
+next() {
+    playerctl next
+}
+
+prev() {
+    playerctl previous
+}
+
+play-pause() {
+    playerctl play-pause
+}
+
+
+if [[ "$1" == "--song" ]]; then
+	get_song
+elif [[ "$1" == "--artist" ]]; then
+	get_artist
+elif [[ "$1" == "--album" ]]; then
+    get_album
+elif [[ "$1" == "--status" ]]; then
+    get_status
+elif [[ "$1" == "--toggle" ]]; then
+	play-pause
+elif [[ "$1" == "--next" ]]; then
+	next
+elif [[ "$1" == "--prev" ]]; then
+	previous
+fi
