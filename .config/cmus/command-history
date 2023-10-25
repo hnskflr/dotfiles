@@ -1,0 +1,29 @@
+set 
+fset ogg=filename="*.ogg"
+fset unheard=play_count=0
+colorscheme cyan
+colorscheme nord
+q
+colorscheme dracula
+colorscheme default
+colorscheme amazon
+colorscheme solarized-dark
+colorscheme night
+colorscheme gruvbox
+colorscheme spotify
+lyr
+clear 
+unbind
+colorscheme
+fset classical=genre="Classical"
+:12344213qqqq:q
+add .
+add Killer Be Killed/
+add *
+add 
+clear
+a .
+help
+add /home/hannes/Music/
+a *
+h
