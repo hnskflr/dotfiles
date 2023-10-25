@@ -1,7 +1,7 @@
 ;; VARIABLES
 ;; workspaces
-(deflisten workspaces :initial "[]" "sh ~/.config/eww/bar/scripts/get-workspaces")
-(deflisten current_workspace :initial "1" "sh ~/.config/eww/bar/scripts/get-active-workspace")
+;; (deflisten workspaces :initial "[]" "sh ~/.config/eww/bar/scripts/get-workspaces")
+;; (deflisten current_workspace :initial "1" "sh ~/.config/eww/bar/scripts/get-active-workspace")
 
 ;; time
 (defpoll clock_hour :interval "1m" "date +\%I")
@@ -63,19 +63,19 @@
     ;; (literal  
         ;; :content workspace))
 
-(defwidget workspaces[]
-    (eventbox 
-        :onscroll "sh ~/.config/eww/bar/scripts/change-active-workspace {} ${current_workspace}" 
-        (box 
-            :space-evenly true
-            :class "works"
-            (for workspace in workspaces
-                (eventbox 
-                    :onclick "hyprctl dispatch workspace ${workspace.id}"
-                    (box 
-                        :class "workspace-entry ${workspace.id == current_workspace ? "workspace-current" : "workspace"}"
-                        (label 
-                            :text "${workspace.id == current_workspace ? "" : "○"}")))))))
+;; (defwidget workspaces[]
+;;     (eventbox 
+;;         :onscroll "sh ~/.config/eww/bar/scripts/change-active-workspace {} ${current_workspace}" 
+;;         (box 
+;;             :space-evenly true
+;;             :class "works"
+;;             (for workspace in workspaces
+;;                 (eventbox 
+;;                     :onclick "hyprctl dispatch workspace ${workspace.id}"
+;;                     (box 
+;;                         :class "workspace-entry ${workspace.id == current_workspace ? "workspace-current" : "workspace"}"
+;;                         (label 
+;;                             :text "${workspace.id == current_workspace ? "" : "○"}")))))))
 
 ;; MUSIC
 ;; (defwidget music []
@@ -320,7 +320,8 @@
 	:space-evenly false  
     :halign "start"
 	:class "left_modules"
-    (workspaces)))
+    ;; (workspaces)
+    ))
 
 (defwidget center []
 (box 
@@ -351,3 +352,24 @@
         (left)
         (center)
         (right)))
+
+;; BAR
+(defwindow bar2
+    :monitor 1
+    :geometry
+        (geometry 
+            :x "0%"
+            :y "7"
+            :width "98%"
+            :height "0%"
+            :anchor "top center")
+        :stacking "bg"
+        :exclusive true
+        :windowtype "dock"
+    (box 
+        :class "bar_class"
+        :orientation "h"
+        (left)
+        (center)
+        (right)))
+

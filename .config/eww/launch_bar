@@ -10,3 +10,10 @@
 # fi
 
 eww open bar -c $HOME/.config/eww/bar/
+
+num_monitors=$(hyprctl monitors | grep "Monitor" | wc -l)
+
+if [ $num_monitors -ge 2 ]
+then
+    eww open bar2 -c $HOME/.config/eww/bar/
+fi

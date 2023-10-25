@@ -16,6 +16,8 @@ alias sudo="doas"
 alias nw="nmcli dev wifi"
 alias nwc="nmcli dev wifi connect"
 
+alias dnd="dragon-drop"
+
 function f
     fff $argv
     set -q XDG_CACHE_HOME; or set XDG_CACHE_HOME $HOME/.cache
