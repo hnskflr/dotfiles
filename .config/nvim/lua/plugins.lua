@@ -14,44 +14,37 @@ vim.opt.rtp:prepend(lazypath)
 
 local plugin_specs = {
 
-    -- {
-    --     "hrsh7th/nvim-cmp",
-    --     -- event = 'InsertEnter',
-    --     event = "VeryLazy",
-    --     dependencies = {
-    --         "hrsh7th/cmp-nvim-lsp",
-    --         "onsails/lspkind-nvim",
-    --         "hrsh7th/cmp-path",
-    --         "hrsh7th/cmp-buffer",
-    --         "hrsh7th/cmp-omni",
-    --         "hrsh7th/cmp-emoji",
-    --         "quangnguyen30192/cmp-nvim-ultisnips",
-    --     },
-    --     config = function()
-    --         require("config.nvim-cmp")
-    --     end,
-    -- },
-    --
     {
-        "neoclide/coc.nvim",
-        branch = "release",
+        "neovim/nvim-lspconfig", -- REQUIRED: for native Neovim LSP integration
+        lazy = false, -- REQUIRED: tell lazy.nvim to start this plugin at startup
+        dependencies = {
+          { "ms-jpq/coq_nvim", branch = "coq" },
+          { "ms-jpq/coq.artifacts", branch = "artifacts" },
+          { 'ms-jpq/coq.thirdparty', branch = "3p" },
+        },
+        init = function()
+          vim.g.coq_settings = {
+              auto_start = true, -- if you want to start COQ at startup
+              -- Your COQ settings here
+          }
+        end,
+        config = function()
+            require("config.nvim-lspconfig")
+        end,
+        opts = {
+            servers = {
+                dartls = {},
+            },
+        },
     },
-
-    -- {
-    --     "neovim/nvim-lspconfig",
-    --     event = { "BufRead", "BufNewFile" },
-    --     config = function()
-    --         require("config.lsp")
-    --     end,
-    -- },
-
+    "williamboman/mason.nvim",
+    "williamboman/mason-lspconfig.nvim",
     {
         "JoosepAlviste/palenightfall.nvim",
         config = function()
             require("config.palenightfall")
         end,
     },
-
     {
         "nvim-treesitter/nvim-treesitter",
         event = "VeryLazy",
@@ -60,57 +53,33 @@ local plugin_specs = {
             require("config.treesitter")
         end,
     },
-
     {
         "nvim-telescope/telescope.nvim",
-        cmd = "Telescope",
         dependencies = {
             "nvim-telescope/telescope-symbols.nvim",
+            'nvim-lua/plenary.nvim'
         },
         config = function()
             require("config.telescope")
         end,
     },
-
     { "nvim-tree/nvim-web-devicons", event = "VeryLazy" },
-
     {
         "akinsho/bufferline.nvim",
         event = { "BufEnter" },
-        cond = firenvim_not_active,
         config = function()
             require("config.bufferline")
         end,
     },
-
-    {
-        "tyru/open-browser.vim",
-        event = "VeryLazy",
-    },
-
     { "Raimondi/delimitMate", event = "InsertEnter" },
-
-    { "tpope/vim-commentary", event = "VeryLazy" },
-
-    { "stevearc/dressing.nvim" },
-
+    'numToStr/Comment.nvim',
+    "stevearc/dressing.nvim",
     {
         "tpope/vim-fugitive",
-        event = "User InGitRepo",
         config = function()
             require("config.fugitive")
         end,
     },
-
-    { "preservim/vim-markdown", ft = { "markdown" } },
-
-    {
-        "iamcco/markdown-preview.nvim",
-        -- build = "cd app && npm install",
-        ft = { "markdown" },
-        build = ":call mkdp#util#install()",
-    },
-
     {
         "nvim-tree/nvim-tree.lua",
         keys = { "<leader>t" },
@@ -119,33 +88,25 @@ local plugin_specs = {
             require("config.nvim-tree")
         end,
     },
-
     "nvim-lua/plenary.nvim",
-
     {
-        "nvim-telescope/telescope.nvim",
-        cmd = "Telescope",
-        dependencies = {
-            "nvim-telescope/telescope-symbols.nvim",
-        },
-        config = function() 
-            require("config.telescope")
-        end,
-    },
-
-    {
-        "williamboman/mason.nvim",
+        'akinsho/toggleterm.nvim',
+        version = "*",
         config = function()
-            require("config.mason")
+            require("config.toggleterm")
         end,
     },
-
-    -- {
-    --     "williamboman/mason-lspconfig.nvim",
-    --     config = function()
-    --         require("config.mason-lspconfig")
-    --     end,
-    -- },
+    "nordtheme/vim",
+    { "ellisonleao/glow.nvim", config = true, cmd = "Glow" },
+    {
+        'akinsho/flutter-tools.nvim',
+        lazy = false,
+        dependencies = {
+            'nvim-lua/plenary.nvim',
+            'stevearc/dressing.nvim', -- optional for vim.ui.select
+        },
+        config = true,
+    }
 }
 
 

@@ -55,3 +55,7 @@ set termguicolors
 let g:vim_markdown_math = 1
 
 command! -nargs=0 Prettier :CocCommand prettier.forceFormatDocument
+
+if exists("g:neovide")
+    set guifont=FiraCode\ Nerd\ Font\ Mono:h11
+endif

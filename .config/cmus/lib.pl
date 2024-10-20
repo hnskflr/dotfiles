@@ -1242,7 +1242,6 @@
 /home/hannes/Media/Music/Red Hot Chili Peppers/Stadium Arcadium/03 Charlie.flac
 /home/hannes/Media/Music/Red Hot Chili Peppers/Stadium Arcadium/03 Charlie.opus
 /home/hannes/Media/Music/Red Hot Chili Peppers/Stadium Arcadium/04 Stadium Arcadium.flac
-/home/hannes/Media/Music/Red Hot Chili Peppers/Stadium Arcadium/04 Stadium Arcadium.opus
 /home/hannes/Media/Music/Red Hot Chili Peppers/Stadium Arcadium/05 Hump de Bump.flac
 /home/hannes/Media/Music/Red Hot Chili Peppers/Stadium Arcadium/05 Hump de Bump.opus
 /home/hannes/Media/Music/Red Hot Chili Peppers/Stadium Arcadium/06 She’s Only 18.flac
@@ -1252,24 +1251,20 @@
 /home/hannes/Media/Music/Red Hot Chili Peppers/Stadium Arcadium/08 Torture Me.flac
 /home/hannes/Media/Music/Red Hot Chili Peppers/Stadium Arcadium/08 Torture Me.opus
 /home/hannes/Media/Music/Red Hot Chili Peppers/Stadium Arcadium/09 Strip My Mind.flac
-/home/hannes/Media/Music/Red Hot Chili Peppers/Stadium Arcadium/09 Strip My Mind.opus
 /home/hannes/Media/Music/Red Hot Chili Peppers/Stadium Arcadium/10 Especially in Michigan.flac
 /home/hannes/Media/Music/Red Hot Chili Peppers/Stadium Arcadium/10 Especially in Michigan.opus
 /home/hannes/Media/Music/Red Hot Chili Peppers/Stadium Arcadium/11 Warlocks.flac
-/home/hannes/Media/Music/Red Hot Chili Peppers/Stadium Arcadium/11 Warlocks.opus
 /home/hannes/Media/Music/Red Hot Chili Peppers/Stadium Arcadium/12 C’mon Girl.flac
 /home/hannes/Media/Music/Red Hot Chili Peppers/Stadium Arcadium/12 C’mon Girl.opus
 /home/hannes/Media/Music/Red Hot Chili Peppers/Stadium Arcadium/13 Wet Sand.flac
 /home/hannes/Media/Music/Red Hot Chili Peppers/Stadium Arcadium/13 Wet Sand.opus
 /home/hannes/Media/Music/Red Hot Chili Peppers/Stadium Arcadium/14 Hey.flac
-/home/hannes/Media/Music/Red Hot Chili Peppers/Stadium Arcadium/14 Hey.opus
 /home/hannes/Media/Music/Red Hot Chili Peppers/Stadium Arcadium/15 Desecration Smile.flac
 /home/hannes/Media/Music/Red Hot Chili Peppers/Stadium Arcadium/15 Desecration Smile.opus
 /home/hannes/Media/Music/Red Hot Chili Peppers/Stadium Arcadium/16 Tell Me Baby.flac
 /home/hannes/Media/Music/Red Hot Chili Peppers/Stadium Arcadium/16 Tell Me Baby.opus
 /home/hannes/Media/Music/Red Hot Chili Peppers/Stadium Arcadium/17 Hard to Concentrate.flac
 /home/hannes/Media/Music/Red Hot Chili Peppers/Stadium Arcadium/18 21st Century.flac
-/home/hannes/Media/Music/Red Hot Chili Peppers/Stadium Arcadium/18 21st Century.opus
 /home/hannes/Media/Music/Red Hot Chili Peppers/Stadium Arcadium/19 She Looks to Me.flac
 /home/hannes/Media/Music/Red Hot Chili Peppers/Stadium Arcadium/20 Readymade.flac
 /home/hannes/Media/Music/Red Hot Chili Peppers/Stadium Arcadium/20 Readymade.opus
@@ -1281,7 +1276,6 @@
 /home/hannes/Media/Music/Red Hot Chili Peppers/Stadium Arcadium/23 Animal Bar.opus
 /home/hannes/Media/Music/Red Hot Chili Peppers/Stadium Arcadium/24 So Much I.flac
 /home/hannes/Media/Music/Red Hot Chili Peppers/Stadium Arcadium/25 Storm in a Teacup.flac
-/home/hannes/Media/Music/Red Hot Chili Peppers/Stadium Arcadium/25 Storm in a Teacup.opus
 /home/hannes/Media/Music/Red Hot Chili Peppers/Stadium Arcadium/26 We Believe.flac
 /home/hannes/Media/Music/Red Hot Chili Peppers/Stadium Arcadium/26 We Believe.opus
 /home/hannes/Media/Music/Red Hot Chili Peppers/Stadium Arcadium/27 Turn It Again.flac
