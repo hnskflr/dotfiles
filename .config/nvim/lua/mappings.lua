@@ -7,11 +7,8 @@ local opts = {silent = true, noremap = true, expr = true, replace_keycodes = fal
 -- Shortcut for faster save and quit
 keymap.set("n", "<leader>w", "<cmd>update<cr>", { silent = true, desc = "save buffer" })
 
--- Saves the file if modified and quit
-keymap.set("n", "<leader>w", "<cmd>wq<cr>", { silent = true, desc = "quit current window" })
-
 -- quit
-keymap.set("n", "<leader>q", "<cmd>wq<cr>", { silent = true, desc = "quit current window" })
+keymap.set("n", "<leader>q", "<cmd>bd<cr>", { silent = true, desc = "close tab" })
 
 ----------
 -- Tabs --
@@ -27,19 +24,14 @@ keymap.set("n", "<Leader>fg", "<cmd>Telescope live_grep<cr>")
 keymap.set("n", "<Leader>fb", "<cmd>Telescope buffers<cr>")
 
 ----------------
--- toggleterm --
-local Terminal  = require('toggleterm.terminal').Terminal
-local lazygit = Terminal:new({ 
-    cmd = "lazygit",
-    hidden = true,
-    direction = "float"
-})
+-- mini --
+keymap.set("n", "<Leader>t", "<cmd>lua MiniFiles.open()<cr>")
 
-
--------------
--- lazygit --
-function _lazygit_toggle()
-  lazygit:toggle()
-end
-
-keymap.set("n", "<leader>g", "<cmd>lua _lazygit_toggle()<CR>", {noremap = true, silent = true})
+----------------
+-- sessions --
+-- keymap.set("n", "<Leader>ss", function()
+--     local path = vim.fn.expand('%:p')
+--     local n = string.find(string.reverse(path), "/")
+--     path = string.sub(path, 0, string.len(path) - n)
+--     vim.cmd("mksession! /home/hannes/.config/nvim/sessions" .. path .. ".vim")
+-- end)

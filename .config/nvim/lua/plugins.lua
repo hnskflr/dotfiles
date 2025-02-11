@@ -71,23 +71,7 @@ local plugin_specs = {
             require("config.bufferline")
         end,
     },
-    { "Raimondi/delimitMate", event = "InsertEnter" },
-    'numToStr/Comment.nvim',
     "stevearc/dressing.nvim",
-    {
-        "tpope/vim-fugitive",
-        config = function()
-            require("config.fugitive")
-        end,
-    },
-    {
-        "nvim-tree/nvim-tree.lua",
-        keys = { "<leader>t" },
-        dependencies = { "nvim-tree/nvim-web-devicons" },
-        config = function()
-            require("config.nvim-tree")
-        end,
-    },
     "nvim-lua/plenary.nvim",
     {
         'akinsho/toggleterm.nvim',
@@ -96,8 +80,6 @@ local plugin_specs = {
             require("config.toggleterm")
         end,
     },
-    "nordtheme/vim",
-    { "ellisonleao/glow.nvim", config = true, cmd = "Glow" },
     {
         'akinsho/flutter-tools.nvim',
         lazy = false,
@@ -106,6 +88,41 @@ local plugin_specs = {
             'stevearc/dressing.nvim', -- optional for vim.ui.select
         },
         config = true,
+    },
+    {
+        'AlexvZyl/nordic.nvim',
+        lazy = false,
+        priority = 1000,
+        config = function()
+            require('nordic').setup({
+                transparent = {
+                    -- bg = true,
+                    float = true,
+                },
+                bright_border = true,
+                reduce_blue = true,
+            })
+        end
+    },
+    "sbdchd/neoformat",
+    { "wakatime/vim-wakatime", lazy = false },
+    {
+        "iamcco/markdown-preview.nvim",
+        cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+        ft = { "markdown" },
+        build = function() vim.fn["mkdp#util#install"]() end,
+    },
+    {
+        'echasnovski/mini.nvim',
+        config =  function()
+            require("config.mini")
+        end,
+    },
+    {
+	    "Pocco81/auto-save.nvim",
+	    config = function()
+	    	 require("auto-save").setup{}
+	    end,
     }
 }
 
