@@ -1,18 +1,24 @@
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-
-if not vim.loop.fs_stat(lazypath) then
-    vim.fn.system {
-        "git",
-        "clone",
-        "--filter=blob:none",
-        "https://github.com/folke/lazy.nvim.git",
-        "--branch=stable", -- latest stable release
-        lazypath,
-    }
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+  if vim.v.shell_error ~= 0 then
+    vim.api.nvim_echo({
+      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+      { out, "WarningMsg" },
+      { "\nPress any key to exit..." },
+    }, true, {})
+    vim.fn.getchar()
+    os.exit(1)
+  end
 end
 vim.opt.rtp:prepend(lazypath)
 
+vim.g.mapleader = " "
+vim.g.maplocalleader = "\\"
+
 local plugin_specs = {
+    "dstein64/vim-startuptime",
 
     {
         "neovim/nvim-lspconfig", -- REQUIRED: for native Neovim LSP integration
@@ -24,18 +30,14 @@ local plugin_specs = {
         },
         init = function()
           vim.g.coq_settings = {
-              auto_start = true, -- if you want to start COQ at startup
+              auto_start = "shut-up", -- if you want to start COQ at startup
+              -- shut_up = true
               -- Your COQ settings here
           }
         end,
         config = function()
             require("config.nvim-lspconfig")
         end,
-        opts = {
-            servers = {
-                dartls = {},
-            },
-        },
     },
     "williamboman/mason.nvim",
     "williamboman/mason-lspconfig.nvim",
@@ -71,15 +73,6 @@ local plugin_specs = {
             require("config.bufferline")
         end,
     },
-    "stevearc/dressing.nvim",
-    "nvim-lua/plenary.nvim",
-    {
-        'akinsho/toggleterm.nvim',
-        version = "*",
-        config = function()
-            require("config.toggleterm")
-        end,
-    },
     {
         'akinsho/flutter-tools.nvim',
         lazy = false,
@@ -87,7 +80,15 @@ local plugin_specs = {
             'nvim-lua/plenary.nvim',
             'stevearc/dressing.nvim', -- optional for vim.ui.select
         },
-        config = true,
+        config = function()
+            require("config.flutter")
+        end,
+    },
+    {
+        "dart-lang/dart-vim-plugin"
+    },
+    {
+        'mfussenegger/nvim-dap',
     },
     {
         'AlexvZyl/nordic.nvim',
@@ -114,6 +115,7 @@ local plugin_specs = {
     },
     {
         'echasnovski/mini.nvim',
+        version = false,
         config =  function()
             require("config.mini")
         end,
@@ -123,6 +125,24 @@ local plugin_specs = {
 	    config = function()
 	    	 require("auto-save").setup{}
 	    end,
+    },
+    {
+      "lervag/vimtex",
+      lazy = false,     -- we don't want to lazy load VimTeX
+      -- tag = "v2.15", -- uncomment to pin to a specific release
+      init = function()
+        -- VimTeX configuration goes here, e.g.
+        vim.g.vimtex_view_method = "zathura"
+
+        vim.g.maplocalleader = " "
+        
+        -- From: https://github.com/lervag/vimtex/blob/master/doc/vimtex.txt#L4671-L4713
+        vim.o.foldmethod = "expr"
+        vim.o.foldexpr="vimtex#fold#level(v:lnum)"
+        vim.o.foldtext="vimtex#fold#text()"
+        -- I like to see at least the content of the sections upon opening
+        vim.o.foldlevel=2
+      end
     }
 }
 

@@ -28,6 +28,12 @@ keymap.set("n", "<Leader>fb", "<cmd>Telescope buffers<cr>")
 keymap.set("n", "<Leader>t", "<cmd>lua MiniFiles.open()<cr>")
 
 ----------------
+-- lsp --
+keymap.set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<cr>")
+
+keymap.set("n", "<Leader>ca", "<cmd>lua vim.lsp.buf.code_action()<cr>")
+
+----------------
 -- sessions --
 -- keymap.set("n", "<Leader>ss", function()
 --     local path = vim.fn.expand('%:p')
