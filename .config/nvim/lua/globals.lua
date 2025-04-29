@@ -8,6 +8,8 @@ vim.g.mapleader = " "
 
 vim.g.vim_markdown_math = 1
 
+vim.g.latexindent_opt="-m"
+
 local options = {
     termguicolors = true
 }

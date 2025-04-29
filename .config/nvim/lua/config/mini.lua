@@ -1,5 +1,5 @@
 require("mini.comment").setup()
-require("mini.basics").setup()
+-- require("mini.basics").setup()
 require("mini.pairs").setup()
 require("mini.files").setup()
 require("mini.sessions").setup({

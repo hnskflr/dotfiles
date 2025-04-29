@@ -105,7 +105,9 @@ local plugin_specs = {
             })
         end
     },
-    "sbdchd/neoformat",
+    { 
+        "sbdchd/neoformat",
+    },
     { "wakatime/vim-wakatime", lazy = false },
     {
         "iamcco/markdown-preview.nvim",
@@ -135,7 +137,7 @@ local plugin_specs = {
         vim.g.vimtex_view_method = "zathura"
 
         vim.g.maplocalleader = " "
-        
+
         -- From: https://github.com/lervag/vimtex/blob/master/doc/vimtex.txt#L4671-L4713
         vim.o.foldmethod = "expr"
         vim.o.foldexpr="vimtex#fold#level(v:lnum)"
