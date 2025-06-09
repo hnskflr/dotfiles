@@ -153,7 +153,9 @@ local plugin_specs = {
         -- suggested keymap
         { "<leader>p", "<cmd>PasteImage<cr>", desc = "Paste image from system clipboard" },
       },
-    }
+    },
+    
+    { "ellisonleao/gruvbox.nvim", priority = 1000 , config = true, opts = ...}
 }
 
 
