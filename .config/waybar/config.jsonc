@@ -1,9 +1,13 @@
 // -*- mode: jsonc -*-
 {
-    "layer": "top", // Waybar at top layer
-    "height": 10, // Waybar height (to be removed for auto height)
+    "layer": "bottom", // Waybar at top layer
+    // "height": 10, // Waybar height (to be removed for auto height)
     // "width": 1280, // Waybar width
     "spacing": 4, // Gaps between modules (4px)
+    "margin-top": 6,
+    "margin-left": 6,
+    "margin-right": 6,
+    "margin-bottom": 0,
     // Choose the order of the modules
     "reload_style_on_change": true,
     "modules-left": [
@@ -23,10 +27,14 @@
         "tray"
     ],
     "hyprland/window": {
-        "max-length": 40   
+        "max-length": 40,
+        "separate-pututs": true
     },
     "hyprland/mode": {
         "format": "<span style=\"italic\">{}</span>"
+    },
+    "hyprland/workspaces": {
+        "all-outputs": true,
     },
     "tray": {
         // "icon-size": 21,
@@ -38,10 +46,10 @@
         "format": "{:%H:%M | %d.%m.%Y}"
     },
     "cpu": {
-        "format": "{usage}% "
+        "format": "  {usage}%"
     },
     "memory": {
-        "format": "{}% "
+        "format": "  {}%"
     },
     "disk": {
         "interval": 30,
@@ -55,31 +63,31 @@
             "warning": 30,
             "critical": 15
         },
-        "format": "{capacity}% {icon} ",
-        "format-full": "{capacity}% {icon} ",
-        "format-charging": "{capacity}%  ",
-        "format-plugged": "{capacity}%  ",
-        "format-alt": "{time} {icon}",
+        "format": "{icon}  {capacity}%",
+        "format-full": "{icon}  {capacity}%",
+        "format-charging": "  {capacity}%",
+        "format-plugged": "  {capacity}%",
+        "format-alt": "{icon}  {time}",
         // "format-good": "", // An empty format will hide the module
         // "format-full": "",
         "format-icons": ["", "", "", "", ""]
     },
     "network": {
         // "interface": "wlp2*", // (Optional) To force the use of this interface
-        "format-wifi": "{essid} ({signalStrength}%)  ",
-        "format-ethernet": "{ipaddr}/{cidr}  ",
-        "tooltip-format": "{ifname} via {gwaddr}  ",
-        "format-linked": "{ifname} (No IP)  ",
-        "format-disconnected": "Disconnected ⚠ ",
+        "format-wifi": "  {essid} ({signalStrength}%)",
+        "format-ethernet": " {ipaddr}/{cidr}",
+        "tooltip-format": " {ifname} via {gwaddr}",
+        "format-linked": " {ifname} (No IP)",
+        "format-disconnected": "⚠ Disconnected",
         "format-alt": "{ifname}: {ipaddr}/{cidr}"
     },
     "pulseaudio": {
         // "scroll-step": 1, // %, can be a float
-        "format": "{volume}% {icon} ",
-        "format-bluetooth": "{volume}% {icon}  ",
-        "format-bluetooth-muted": " {icon}  ",
+        "format": "{icon}  {volume}%",
+        "format-bluetooth": "{icon}  {volume}%",
+        "format-bluetooth-muted": "  {icon}",
         "format-muted": " ",
-        "format-source": "{volume}%  ",
+        "format-source": " {volume}%",
         "format-source-muted": "",
         "format-icons": {
             "headphone": "",

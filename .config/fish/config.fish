@@ -18,21 +18,17 @@ alias nwc="nmcli dev wifi connect"
 
 alias dnd="dragon-drop"
 
-function f
-    fff $argv
-    set -q XDG_CACHE_HOME; or set XDG_CACHE_HOME $HOME/.cache
-    cd (cat $XDG_CACHE_HOME/fff/.fff_d)
+alias p="lf ~/music"
+
+function p --description "open lf in music dir"
+    if [ -n "$argv" ]
+        lf $(fd "$argv" -t d ~/music | head -1)
+    else
+        lf ~/music 
+    end
+
 end
 
-function y
-	set tmp (mktemp -t "yazi-cwd.XXXXXX")
-	yazi $argv --cwd-file="$tmp"
-	if set cwd (command cat -- "$tmp"); and [ -n "$cwd" ]; and [ "$cwd" != "$PWD" ]
-		builtin cd -- "$cwd"
-	end
-	rm -f -- "$tmp"
-end
-
-zoxide init fish | source
+# zoxide init fish | source
 
 set -gx EDITOR nvim

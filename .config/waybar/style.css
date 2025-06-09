@@ -41,6 +41,11 @@ button:hover {
     border-top: 2px solid #c9545d;
 }
 
+#workspaces button.active {
+    color: @yellow;
+    /* border-bottom: 2px solid @orange; */
+}
+
 #clock,
 #battery,
 #cpu,

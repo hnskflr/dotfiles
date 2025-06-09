@@ -13,32 +13,39 @@ if &shortmess =~ 'A'
 else
   set shortmess=aoO
 endif
-badd +2 lib/main.dart
-badd +29 ~/projects/android/boulderball/lib/widgets/community/user_route_ratings_widet.dart
-badd +166 ~/projects/android/boulderball/lib/screens/community/community_routes_screen.dart
-badd +27 lib/widgets/bb_box.dart
+badd +78 lib/main.dart
+badd +109 ~/projects/android/boulderball/lib/providers/user_provider.dart
+badd +235 ~/projects/android/boulderball/lib/providers/bundle_provider.dart
+badd +324 ~/projects/android/boulderball/lib/screens/routes/route_details_screen.dart
+badd +243 ~/projects/android/boulderball/lib/screens/performance_screen.dart
+badd +47 lib/widgets/community/username_dialog.dart
+badd +10 lib/models/user_model.dart
+badd +115 ~/projects/android/boulderball/lib/widgets/routes/bundled_bundle_widget.dart
+badd +1 ~/projects/android/boulderball/lib/widgets/routes/purchasable_route_widget.dart
+badd +163 ~/projects/android/boulderball/lib/widgets/routes/bundle_widget.dart
+badd +79 lib/screens/routes/bundle_list_screen.dart
 argglobal
 %argdel
 $argadd lib/main.dart
-edit ~/projects/android/boulderball/lib/screens/community/community_routes_screen.dart
+edit ~/projects/android/boulderball/lib/widgets/routes/bundle_widget.dart
 argglobal
-balt lib/widgets/bb_box.dart
-setlocal fdm=manual
-setlocal fde=0
-setlocal fmr={{{,}}}
-setlocal fdi=#
-setlocal fdl=0
-setlocal fml=1
-setlocal fdn=20
-setlocal fen
+balt ~/projects/android/boulderball/lib/widgets/routes/purchasable_route_widget.dart
+setlocal foldmethod=manual
+setlocal foldexpr=0
+setlocal foldmarker={{{,}}}
+setlocal foldignore=#
+setlocal foldlevel=0
+setlocal foldminlines=1
+setlocal foldnestmax=20
+setlocal foldenable
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 163 - ((8 * winheight(0) + 24) / 49)
+let s:l = 163 - ((36 * winheight(0) + 23) / 47)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
 keepjumps 163
-normal! 021|
+normal! 054|
 tabnext 1
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0 && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'
   silent exe 'bwipe ' . s:wipebuf

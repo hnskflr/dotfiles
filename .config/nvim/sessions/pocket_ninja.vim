@@ -13,35 +13,31 @@ if &shortmess =~ 'A'
 else
   set shortmess=aoO
 endif
-badd +14 ~/projects/android/pocket_ninja/lib/models/player.dart
-badd +27 lib/providers/players_provider.dart
-badd +26 lib/views/friends_list/screens/friends_list_screen.dart
-badd +21 lib/views/game/screens/leaderboard_screen.dart
-badd +61 lib/providers/game_provider.dart
-badd +28 ~/projects/android/pocket_ninja/lib/models/game.dart
-badd +58 lib/views/game/screens/timer_screen.dart
+badd +23 lib/views/game/screens/timer_screen.dart
+badd +1 ~/projects/android/pocket_ninja/lib/views/game/screens/init_screen.dart
+badd +15 ~/projects/android/pocket_ninja/lib/views/home/screens/home_screen.dart
+badd +1 lib/main.dart
+badd +14 lib/views/game/screens/leaderboard_screen.dart
+badd +33 ~/projects/android/pocket_ninja/lib/providers/game_provider.dart
 argglobal
 %argdel
 $argadd lib/main.dart
-edit ~/projects/android/pocket_ninja/lib/models/player.dart
+edit lib/views/game/screens/timer_screen.dart
 argglobal
-balt lib/views/game/screens/timer_screen.dart
-setlocal foldmethod=manual
-setlocal foldexpr=0
+setlocal foldmethod=expr
+setlocal foldexpr=vimtex#fold#level(v:lnum)
 setlocal foldmarker={{{,}}}
 setlocal foldignore=#
-setlocal foldlevel=0
+setlocal foldlevel=2
 setlocal foldminlines=1
 setlocal foldnestmax=20
 setlocal foldenable
-silent! normal! zE
-let &fdl = &fdl
-let s:l = 14 - ((13 * winheight(0) + 25) / 50)
+let s:l = 21 - ((19 * winheight(0) + 23) / 47)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 14
-normal! 015|
+keepjumps 21
+normal! 023|
 tabnext 1
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0 && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'
   silent exe 'bwipe ' . s:wipebuf

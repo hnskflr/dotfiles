@@ -6,8 +6,7 @@ require("mini.sessions").setup({
     directory = "/home/hannes/.config/nvim/sessions/"
 })
 
-require("mini.surround").setup({
-})
+require("mini.surround").setup()
 
 local header_art =
 [[

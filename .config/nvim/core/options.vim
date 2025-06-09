@@ -71,3 +71,9 @@ endif
 if (has("termguicolors"))
   set termguicolors
 endif
+
+set nocompatible
+filetype plugin on
+syntax on
+
+set foldmethod=indent

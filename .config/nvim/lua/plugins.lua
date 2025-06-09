@@ -133,25 +133,33 @@ local plugin_specs = {
       lazy = false,     -- we don't want to lazy load VimTeX
       -- tag = "v2.15", -- uncomment to pin to a specific release
       init = function()
-        -- VimTeX configuration goes here, e.g.
-        vim.g.vimtex_view_method = "zathura"
-
-        vim.g.maplocalleader = " "
-
-        -- From: https://github.com/lervag/vimtex/blob/master/doc/vimtex.txt#L4671-L4713
-        vim.o.foldmethod = "expr"
-        vim.o.foldexpr="vimtex#fold#level(v:lnum)"
-        vim.o.foldtext="vimtex#fold#text()"
-        -- I like to see at least the content of the sections upon opening
-        vim.o.foldlevel=2
-      end
+        require("config.vimtex")
+      end,
+    },
+    {
+        "vimwiki/vimwiki",
+        init = function() 
+            require("config.vimwiki")
+        end,
+    },
+    {
+      "HakonHarnes/img-clip.nvim",
+      event = "VeryLazy",
+      opts = {
+        -- add options here
+        -- or leave it empty to use the default settings
+      },
+      keys = {
+        -- suggested keymap
+        { "<leader>p", "<cmd>PasteImage<cr>", desc = "Paste image from system clipboard" },
+      },
     }
 }
 
 
 local lazy_opts = {
     ui = {
-        border = "rounded",
+        border = "solid",
         title = "Plugin Manager",
         title_pos = "center",
     },
