@@ -72,8 +72,29 @@ if (has("termguicolors"))
   set termguicolors
 endif
 
-set nocompatible
+set nocp
 filetype plugin on
 syntax on
 
 set foldmethod=indent
+
+" netrw
+function! NetrwMapping()
+  nmap <buffer> H u 
+  nmap <buffer> h -^
+  nmap <buffer> l <CR>
+
+  nmap <buffer> . gh
+  nmap <buffer> P <C-w>z
+endfunction
+
+augroup netrw_mapping
+  autocmd!
+  autocmd filetype netrw call NetrwMapping()
+augroup END
+
+let g:netrw_keepdir = 0
+let g:netrw_winsize = 30
+let g:netrw_banner = 0
+let g:netrw_list_hide = '\(^\|\s\s\)\zs\.\S\+'
+hi! link netrwMarkFile Search

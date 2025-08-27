@@ -14,22 +14,22 @@ else
   set shortmess=aoO
 endif
 badd +78 lib/main.dart
-badd +109 ~/projects/android/boulderball/lib/providers/user_provider.dart
-badd +235 ~/projects/android/boulderball/lib/providers/bundle_provider.dart
-badd +324 ~/projects/android/boulderball/lib/screens/routes/route_details_screen.dart
-badd +243 ~/projects/android/boulderball/lib/screens/performance_screen.dart
+badd +109 lib/providers/user_provider.dart
+badd +235 lib/providers/bundle_provider.dart
+badd +324 lib/screens/routes/route_details_screen.dart
+badd +243 lib/screens/performance_screen.dart
 badd +47 lib/widgets/community/username_dialog.dart
 badd +10 lib/models/user_model.dart
-badd +115 ~/projects/android/boulderball/lib/widgets/routes/bundled_bundle_widget.dart
-badd +1 ~/projects/android/boulderball/lib/widgets/routes/purchasable_route_widget.dart
-badd +163 ~/projects/android/boulderball/lib/widgets/routes/bundle_widget.dart
+badd +115 lib/widgets/routes/bundled_bundle_widget.dart
+badd +1 lib/widgets/routes/purchasable_route_widget.dart
+badd +163 lib/widgets/routes/bundle_widget.dart
 badd +79 lib/screens/routes/bundle_list_screen.dart
 argglobal
 %argdel
 $argadd lib/main.dart
-edit ~/projects/android/boulderball/lib/widgets/routes/bundle_widget.dart
+edit lib/widgets/routes/bundle_widget.dart
 argglobal
-balt ~/projects/android/boulderball/lib/widgets/routes/purchasable_route_widget.dart
+balt lib/widgets/routes/purchasable_route_widget.dart
 setlocal foldmethod=manual
 setlocal foldexpr=0
 setlocal foldmarker={{{,}}}
@@ -40,12 +40,12 @@ setlocal foldnestmax=20
 setlocal foldenable
 silent! normal! zE
 let &fdl = &fdl
-let s:l = 163 - ((36 * winheight(0) + 23) / 47)
+let s:l = 164 - ((37 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 163
-normal! 054|
+keepjumps 164
+normal! 014|
 tabnext 1
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0 && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'
   silent exe 'bwipe ' . s:wipebuf

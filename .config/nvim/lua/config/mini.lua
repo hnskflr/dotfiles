@@ -1,7 +1,7 @@
 require("mini.comment").setup()
 -- require("mini.basics").setup()
-require("mini.pairs").setup()
-require("mini.files").setup()
+-- require("mini.pairs").setup()
+-- require("mini.files").setup()
 require("mini.sessions").setup({
     directory = "/home/hannes/.config/nvim/sessions/"
 })

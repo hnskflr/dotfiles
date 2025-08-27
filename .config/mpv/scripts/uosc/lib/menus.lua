@@ -6,11 +6,11 @@ function open_command_menu(data, opts)
 	local menu
 
 	local function run_command(command)
-		if type(command) == 'string' then
-			mp.command(command)
-		else
+		if type(command) == 'table' then
 			---@diagnostic disable-next-line: deprecated
 			mp.commandv(unpack(command))
+		else
+			mp.command(tostring(command))
 		end
 	end
 
@@ -19,8 +19,16 @@ function open_command_menu(data, opts)
 			---@diagnostic disable-next-line: deprecated
 			mp.commandv(unpack(itable_join({'script-message-to'}, menu.root.callback, {utils.format_json(event)})))
 		elseif event.type == 'activate' then
-			run_command(event.value)
-			menu:close()
+			-- Modifiers and actions are not available on basic non-callback mode menus.
+			-- `alt` modifier should activate without closing the menu.
+			if (event.modifiers == 'alt' or not event.modifiers) and not event.action then
+				run_command(event.value)
+			end
+			-- Convention: Only pure item activations should close the menu.
+			-- Using modifiers or triggering item actions should not.
+			if not event.keep_open and not event.modifiers and not event.action then
+				menu:close()
+			end
 		end
 	end
 
@@ -85,6 +93,20 @@ function create_self_updating_menu_opener(opts)
 
 		---@type MenuAction[]
 		local actions = opts.actions or {}
+		if opts.on_move then
+			actions[#actions + 1] = {
+				name = 'move_up',
+				icon = 'arrow_upward',
+				label = t('Move up') .. ' (ctrl+up/pgup/home)',
+				filter_hidden = true,
+			}
+			actions[#actions + 1] = {
+				name = 'move_down',
+				icon = 'arrow_downward',
+				label = t('Move down') .. ' (ctrl+down/pgdwn/end)',
+				filter_hidden = true,
+			}
+		end
 		if opts.on_reload then
 			actions[#actions + 1] = {name = 'reload', icon = 'refresh', label = t('Reload') .. ' (f5)'}
 		end
@@ -124,10 +146,23 @@ function create_self_updating_menu_opener(opts)
 			selected_index = selected_index,
 			on_move = opts.on_move and 'callback' or nil,
 			on_paste = opts.on_paste and 'callback' or nil,
-			on_close = 'callback',
 		}, function(event)
 			if event.type == 'activate' then
-				if event.action == 'reload' and opts.on_reload then
+				if (event.action == 'move_up' or event.action == 'move_down') and opts.on_move then
+					local to_index = event.index + (event.action == 'move_up' and -1 or 1)
+					if to_index >= 1 and to_index <= #menu.current.items then
+						opts.on_move({
+							type = 'move',
+							from_index = event.index,
+							to_index = to_index,
+							menu_id = menu.current.id,
+						})
+						menu:select_index(to_index)
+						if not event.is_pointer then
+							menu:scroll_to_index(to_index, nil, true)
+						end
+					end
+				elseif event.action == 'reload' and opts.on_reload then
 					opts.on_reload({type = 'reload', index = event.index, value = event.value})
 				elseif event.action == 'remove' and (opts.on_remove or opts.on_delete) then
 					remove_or_delete(event.index, event.value, event.menu_id, event.modifiers)
@@ -193,6 +228,8 @@ function create_select_tracklist_type_menu_opener(opts)
 		end
 
 		local track_prop_index, snd_prop_index = get_props()
+		local filename = mp.get_property_native('filename/no-ext')
+		local escaped_filename = filename and regexp_escape(filename)
 		local first_item_index = #items + 1
 		local active_index = nil
 		local disabled_item = nil
@@ -214,7 +251,10 @@ function create_select_tracklist_type_menu_opener(opts)
 				local hint_values = {}
 				local track_selected = track.selected and track.id == track_prop_index
 				local snd_selected = snd and track.id == snd_prop_index
-				local function h(value) hint_values[#hint_values + 1] = value end
+				local function h(value)
+					value = trim(value)
+					if #value > 0 then hint_values[#hint_values + 1] = value end
+				end
 
 				if track.lang then h(track.lang) end
 				if track['demux-h'] then
@@ -230,7 +270,16 @@ function create_select_tracklist_type_menu_opener(opts)
 				if track['demux-samplerate'] then h(string.format('%.3gkHz', track['demux-samplerate'] / 1000)) end
 				if track.forced then h(t('forced')) end
 				if track.default then h(t('default')) end
-				if track.external then h(t('external')) end
+				if track.external then
+					local extension = track.title:match('%.([^%.]+)$')
+					if track.title and escaped_filename and extension then
+						track.title = trim(track.title:gsub(escaped_filename .. '%.?', ''):gsub('%.?([^%.]+)$', ''))
+						if track.title == '' or track.lang and track.title:lower() == track.lang:lower() then
+							track.title = nil
+						end
+					end
+					h(t('external'))
+				end
 
 				items[#items + 1] = {
 					title = (track.title and track.title or t('Track %s', track.id)),
@@ -340,13 +389,12 @@ function open_file_navigation_menu(directory_path, handle_activate, opts)
 				name = 'subprocess',
 				capture_stdout = true,
 				playback_only = false,
-				args = {'wmic', 'logicaldisk', 'get', 'name', '/value'},
+				args = {'fsutil', 'fsinfo', 'drives'},
 			})
 			local items, selected_index = {}, 1
 
 			if process.status == 0 then
-				for _, value in ipairs(split(process.stdout, '\n')) do
-					local drive = string.match(value, 'Name=([A-Z]:)')
+				for drive in process.stdout:gmatch('(%a:)\\') do
 					if drive then
 						local drive_path = normalize_path(drive)
 						items[#items + 1] = {
@@ -427,7 +475,6 @@ function open_file_navigation_menu(directory_path, handle_activate, opts)
 		title = opts.title or '',
 		footnote = t('%s to go up in tree.', 'alt+up') .. ' ' .. t('Paste path or url to open.'),
 		items = {},
-		on_close = opts.on_close and 'callback' or nil,
 		on_paste = 'callback',
 	}
 
@@ -464,7 +511,8 @@ function open_file_navigation_menu(directory_path, handle_activate, opts)
 	end
 
 	---@param event MenuEventActivate
-	local function activate(event)
+	---@param only_if_dir? boolean Activate item only if it's a directory.
+	local function activate(event, only_if_dir)
 		local path = event.value
 		local is_drives = path == '{drives}'
 
@@ -482,17 +530,27 @@ function open_file_navigation_menu(directory_path, handle_activate, opts)
 
 		if info.is_dir and not event.modifiers and not event.action then
 			open_directory(path)
-		else
+		elseif not only_if_dir then
 			handle_activate(event)
 		end
 	end
+
 	menu = Menu:open(menu_data, function(event)
 		if event.type == 'activate' then
 			activate(event --[[@as MenuEventActivate]])
-		elseif event.type == 'back' or event.type == 'key' and event.id == 'alt+up' then
+		elseif event.type == 'back' or event.type == 'key' and itable_has({'alt+up', 'left'}, event.id) then
 			if back_path then open_directory(back_path) end
 		elseif event.type == 'paste' then
 			handle_activate({type = 'activate', value = event.value})
+		elseif event.type == 'key' then
+			if event.id == 'right' then
+				local selected_item = event.selected_item
+				if selected_item then
+					activate(table_assign({}, selected_item, {type = 'activate'}), true)
+				end
+			elseif event.id == 'ctrl+c' and event.selected_item then
+				set_clipboard(event.selected_item.value)
+			end
 		elseif event.type == 'close' then
 			close()
 		end
@@ -608,7 +666,8 @@ do
 						-- If command is already in menu, just append the key to it
 						if key ~= '#' and command ~= '' and target_menu.items_by_command[command] then
 							local hint = target_menu.items_by_command[command].hint
-							target_menu.items_by_command[command].hint = hint and hint .. ', ' .. key or key
+							local key_human = keybind_to_human(key)
+							target_menu.items_by_command[command].hint = hint and hint .. ', ' .. key_human or key_human
 						else
 							-- Separator
 							if title_part:sub(1, 3) == '---' then
@@ -617,7 +676,7 @@ do
 							elseif command ~= 'ignore' then
 								local item = {
 									title = title_part,
-									hint = not is_dummy and key or nil,
+									hint = not is_dummy and keybind_to_human(key) or nil,
 									value = command,
 								}
 								if command == '' then
@@ -656,7 +715,7 @@ function get_keybinds_items()
 		local id = bind.key .. '<>' .. bind.cmd
 		if not ids[id] then
 			ids[id] = true
-			items[#items + 1] = {title = bind.cmd, hint = bind.key, value = bind.cmd}
+			items[#items + 1] = {title = bind.cmd, hint = keybind_to_human(bind.key) or bind.key, value = bind.cmd}
 		end
 	end
 
@@ -835,8 +894,7 @@ function open_subtitle_downloader()
 		return
 	end
 
-	local search_suggestion, file_path = '', nil
-	local destination_directory = mp.command_native({'expand-path', '~~/subtitles'})
+	local search_suggestion, file_path, destination_directory = '', nil, nil
 	local credentials = {'--api-key', config.open_subtitles_api_key, '--agent', config.open_subtitles_agent}
 
 	if state.path then
@@ -852,49 +910,46 @@ function open_subtitle_downloader()
 		end
 	end
 
-	local handle_select, handle_search
+	local force_destination = options.subtitles_directory:sub(1, 1) == '!'
+	if force_destination or not destination_directory then
+		local subtitles_directory = options.subtitles_directory:sub(force_destination and 2 or 1)
+		destination_directory = mp.command_native({'expand-path', subtitles_directory})
+	end
 
-	-- Ensures response is valid, and returns its payload, or handles error reporting,
-	-- and returns `nil`, indicating the consumer should abort response handling.
-	local function ensure_response_data(success, result, error, check)
-		local data
-		if success and result and result.status == 0 then
-			data = utils.parse_json(result.stdout)
-			if not data or not check(data) then
-				data = (data and data.error == true) and data or {
-					error = true,
-					message = t('invalid response json (see console for details)'),
-					message_verbose = 'invalid response json: ' .. utils.to_string(result.stdout),
-				}
-			end
-		else
-			data = {
-				error = true,
-				message = error or t('process exited with code %s (see console for details)', result.status),
-				message_verbose = result.stdout .. result.stderr,
-			}
-		end
+	local handle_download, handle_search
 
-		if data.error then
-			local message, message_verbose = data.message or t('unknown error'), data.message_verbose or data.message
-			if message_verbose then msg.error(message_verbose) end
+	-- Checks if there an error, or data is invalid. If true, reports the error,
+	-- updates menu to inform about it, and returns true.
+	---@param error string|nil
+	---@param data any
+	---@param check_is_valid? fun(data: any):boolean
+	---@return boolean abort Whether the further response handling should be aborted.
+	local function should_abort(error, data, check_is_valid)
+		if error or not data or (not check_is_valid or not check_is_valid(data)) then
 			menu:update_items({
 				{
-					title = message,
-					hint = t('error'),
+					title = t('Something went wrong.'),
+					align = 'center',
+					muted = true,
+					italic = true,
+					selectable = false,
+				},
+				{
+					title = t('See console for details.'),
+					align = 'center',
 					muted = true,
 					italic = true,
 					selectable = false,
 				},
 			})
-			return
+			msg.error(error or ('Invalid response: ' .. (utils.format_json(data) or tostring(data))))
+			return true
 		end
-
-		return data
+		return false
 	end
 
 	---@param data {kind: 'file', id: number}|{kind: 'page', query: string, page: number}
-	handle_select = function(data)
+	handle_download = function(data)
 		if data.kind == 'page' then
 			handle_search(data.query, data.page)
 			return
@@ -910,25 +965,14 @@ function open_subtitle_downloader()
 			end
 		end)
 
-		local args = itable_join({config.ziggy_path, 'download-subtitles'}, credentials, {
+		local args = itable_join({'download-subtitles'}, credentials, {
 			'--file-id', tostring(data.id),
 			'--destination', destination_directory,
 		})
 
-		mp.command_native_async({
-			name = 'subprocess',
-			capture_stderr = true,
-			capture_stdout = true,
-			playback_only = false,
-			args = args,
-		}, function(success, result, error)
+		call_ziggy_async(args, function(error, data)
 			if not menu:is_alive() then return end
-
-			local data = ensure_response_data(success, result, error, function(data)
-				return type(data.file) == 'string'
-			end)
-
-			if not data then return end
+			if should_abort(error, data, function(data) return type(data.file) == 'string' end) then return end
 
 			load_track('sub', data.file)
 
@@ -965,7 +1009,7 @@ function open_subtitle_downloader()
 
 		menu:update_items({{icon = 'spinner', align = 'center', selectable = false, muted = true}})
 
-		local args = itable_join({config.ziggy_path, 'search-subtitles'}, credentials)
+		local args = itable_join({'search-subtitles'}, credentials)
 
 		local languages = itable_filter(get_languages(), function(lang) return lang:match('.json$') == nil end)
 		args[#args + 1] = '--languages'
@@ -984,20 +1028,14 @@ function open_subtitle_downloader()
 			args[#args + 1] = query
 		end
 
-		mp.command_native_async({
-			name = 'subprocess',
-			capture_stderr = true,
-			capture_stdout = true,
-			playback_only = false,
-			args = args,
-		}, function(success, result, error)
+		call_ziggy_async(args, function(error, data)
 			if not menu:is_alive() then return end
 
-			local data = ensure_response_data(success, result, error, function(data)
+			local function check_is_valid(data)
 				return type(data.data) == 'table' and data.page and data.total_pages
-			end)
+			end
 
-			if not data then return end
+			if should_abort(error, data, check_is_valid) then return end
 
 			local subs = itable_filter(data.data, function(sub)
 				return sub and sub.attributes and sub.attributes.release and type(sub.attributes.files) == 'table' and
@@ -1065,6 +1103,7 @@ function open_subtitle_downloader()
 			on_search = 'callback',
 			search_debounce = 'submit',
 			search_suggestion = search_suggestion,
+			search_submit = search_suggestion and #search_suggestion > 0,
 		},
 		function(event)
 			if event.type == 'activate' then
@@ -1088,7 +1127,7 @@ function open_subtitle_downloader()
 						end
 					end)
 				elseif not event.action then
-					handle_select(event.value)
+					handle_download(event.value)
 				end
 			elseif event.type == 'search' then
 				handle_search(event.query)

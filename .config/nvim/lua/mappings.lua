@@ -2,7 +2,7 @@ local keymap = vim.keymap
 local api = vim.api
 local uv = vim.loop
 
-local opts = {silent = true, noremap = true, expr = true, replace_keycodes = false}
+local opts = { silent = true, noremap = true, expr = true, replace_keycodes = false }
 
 -- Shortcut for faster save and quit
 keymap.set("n", "<leader>w", "<cmd>update<cr>", { silent = true, desc = "save buffer" })
@@ -12,9 +12,8 @@ keymap.set("n", "<leader>q", "<cmd>bd<cr>", { silent = true, desc = "close tab" 
 
 ----------
 -- Tabs --
--- Cycle Bufferline Tabs
-keymap.set("n", "<leader><Tab>", "<cmd>BufferLineCycleNext<cr>")
-keymap.set("n", "<leader><S-Tab>", "<cmd>BufferLineCyclePrev<cr>")
+keymap.set("n", "<leader><Tab>", "<cmd>tabnext<cr>")
+keymap.set("n", "<leader><S-Tab>", "<cmd>tabprevious<cr>")
 
 
 ---------------
@@ -24,8 +23,9 @@ keymap.set("n", "<Leader>fg", "<cmd>Telescope live_grep<cr>")
 keymap.set("n", "<Leader>fb", "<cmd>Telescope buffers<cr>")
 
 ----------------
--- mini --
-keymap.set("n", "<Leader>t", "<cmd>lua MiniFiles.open()<cr>")
+-- netrw --
+keymap.set("n", "<Leader>t", "<cmd>Lexplore<cr>")
+-- keymap.set("n", "<Leader>t", "<cmd>Lexplore %:p:h<cr>") -- netrw in current path
 
 ----------------
 -- lsp --

@@ -65,7 +65,7 @@ function TopBar:decide_titles()
 			longer_title, shorter_title = self.main_title, self.alt_title
 		end
 
-		local escaped_shorter_title = string.gsub(shorter_title --[[@as string]], '[%(%)%.%+%-%*%?%[%]%^%$%%]', '%%%1')
+		local escaped_shorter_title = regexp_escape(shorter_title --[[@as string]])
 		if string.match(longer_title --[[@as string]], escaped_shorter_title) then
 			self.main_title, self.alt_title = longer_title, nil
 		end
@@ -149,7 +149,7 @@ function TopBar:render()
 			local button_fg = is_hover and (button.hover_fg or bg) or fg
 			local button_bg = is_hover and (button.hover_bg or fg) or bg
 
-			cursor:zone('primary_click', rect, button.command)
+			cursor:zone('primary_down', rect, button.command)
 
 			local bg_size = self.size - margin
 			local bg_ax, bg_ay = rect.ax + (is_left and margin or 0), rect.ay + margin
@@ -202,7 +202,7 @@ function TopBar:render()
 			if left_aligned then title_bx = rect.ax - margin else title_ax = rect.bx + margin end
 
 			-- Click action
-			cursor:zone('primary_click', rect, function() mp.command('script-binding uosc/playlist') end)
+			cursor:zone('primary_down', rect, function() mp.command('script-binding uosc/playlist') end)
 		end
 
 		-- Skip rendering titles if there's not enough horizontal space
@@ -226,7 +226,7 @@ function TopBar:render()
 				local title_rect = {ax = ax, ay = title_ay, bx = ax + rect_width, by = by}
 
 				if options.top_bar_alt_title_place == 'toggle' then
-					cursor:zone('primary_click', title_rect, function() self:toggle_title() end)
+					cursor:zone('primary_down', title_rect, function() self:toggle_title() end)
 				end
 
 				ass:rect(title_rect.ax, title_rect.ay, title_rect.bx, title_rect.by, {
@@ -308,17 +308,18 @@ function TopBar:render()
 				local x = align == 6 and rect.bx - padding or rect.ax + padding
 				ass:txt(x, rect.ay + height / 2, align, text, opts)
 
-				-- Click action
-				cursor:zone('primary_click', rect, function() mp.command('script-binding uosc/chapters') end)
-
 				-- Time
-				rect.ax = left_aligned and rect.ax - spacing - remaining_box_width or rect.bx + spacing
-				rect.bx = rect.ax + remaining_box_width
+				local time_ax = left_aligned and rect.ax - spacing - remaining_box_width or rect.bx + spacing
+				local time_bx = time_ax + remaining_box_width
 				opts.clip = nil
-				ass:rect(rect.ax, rect.ay, rect.bx, rect.by, {
+				ass:rect(time_ax, rect.ay, time_bx, rect.by, {
 					color = bg, opacity = visibility * config.opacity.title, radius = state.radius,
 				})
-				ass:txt(rect.ax + padding_half, rect.ay + height / 2, 4, remaining_human, opts)
+				ass:txt(time_ax + padding_half, rect.ay + height / 2, 4, remaining_human, opts)
+
+				-- Click action
+				rect.bx = time_bx
+				cursor:zone('primary_down', rect, function() mp.command('script-binding uosc/chapters') end)
 
 				title_ay = rect.by + spacing
 			end

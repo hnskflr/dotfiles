@@ -428,6 +428,11 @@ function serialize_path(path)
 	}
 end
 
+local system_files = create_set({
+	'$RECYCLE.BIN', '$Recycle.Bin', '$SysReset', '$WinREAgent', '.sys', 'pagefile.sys', 'hiberfil.sys', 'config.sys',
+	'swapfile.sys', 'Thumbs.db', 'desktop.ini',
+})
+
 -- Reads items in directory and splits it into directories and files tables.
 ---@param path string
 ---@param opts? {types?: string[], hidden?: boolean}
@@ -444,7 +449,7 @@ function read_directory(path, opts)
 	end
 
 	for _, item in ipairs(items) do
-		if item ~= '.' and item ~= '..' and (opts.hidden or item:sub(1, 1) ~= '.') then
+		if item ~= '.' and item ~= '..' and not system_files[item] and (opts.hidden or item:sub(1, 1) ~= '.') then
 			local info = utils.file_info(join_path(path, item))
 			if info then
 				if info.is_file then
@@ -552,7 +557,7 @@ end
 function navigate_directory(delta)
 	if not state.path or is_protocol(state.path) then return false end
 	local paths, current_index = get_adjacent_files(state.path, {
-		types = config.types.autoload,
+		types = config.types.load,
 		hidden = options.show_hidden_files,
 	})
 	if paths and current_index then
@@ -804,6 +809,19 @@ function find_active_keybindings(key)
 	return key and active_map[key] or active_table
 end
 
+do
+	local key_subs = {{'#', ''}, {anycase('sharp'), '#'}}
+
+	-- Replaces stuff like `SHARP` -> `#`, `#` -> ``
+	---@param keybind string
+	function keybind_to_human(keybind)
+		for _, sub in ipairs(key_subs) do
+			keybind = string.gsub(keybind, sub[1], sub[2])
+		end
+		return keybind
+	end
+end
+
 ---@param type 'sub'|'audio'|'video'
 ---@param path string
 function load_track(type, path)
@@ -814,30 +832,88 @@ function load_track(type, path)
 	end
 end
 
----@return string|nil
-function get_clipboard()
+---@param args (string|number)[]
+---@return string|nil error
+---@return table data
+function call_ziggy(args)
 	local result = mp.command_native({
 		name = 'subprocess',
 		capture_stderr = true,
 		capture_stdout = true,
 		playback_only = false,
-		args = {config.ziggy_path, 'get-clipboard'},
+		args = itable_join({config.ziggy_path}, args),
 	})
 
-	local function print_error(message)
-		msg.error('Getting clipboard data failed. Error: ' .. message)
+	if result.status ~= 0 then
+		return 'Calling ziggy failed. Exit code ' .. result.status .. ': ' .. result.stdout .. result.stderr, {}
 	end
 
-	if result.status == 0 then
-		local data = utils.parse_json(result.stdout)
-		if data and data.payload then
-			return data.payload
-		else
-			print_error(data and (data.error and data.message or 'unknown error') or 'couldn\'t parse json')
-		end
+	local data = utils.parse_json(result.stdout)
+	if not data then
+		return 'Ziggy response error. Couldn\'t parse json: ' .. result.stdout, {}
+	elseif data.error then
+		return 'Ziggy error: ' .. data.message, {}
 	else
-		print_error('exit code ' .. result.status .. ': ' .. result.stdout .. result.stderr)
+		return nil, data
 	end
+end
+
+---@param args (string|number)[]
+---@param callback fun(error: string|nil, data: table)
+---@return fun() abort Function to abort the request.
+function call_ziggy_async(args, callback)
+	local abort_signal = mp.command_native_async({
+		name = 'subprocess',
+		capture_stderr = true,
+		capture_stdout = true,
+		playback_only = false,
+		args = itable_join({config.ziggy_path}, args),
+	}, function(success, result, error)
+		if not success or not result or result.status ~= 0 then
+			local exit_code = (result and result.status or 'unknown')
+			local message = error or (result and result.stdout .. result.stderr) or ''
+			callback('Calling ziggy failed. Exit code: ' .. exit_code .. ' Error: ' .. message, {})
+			return
+		end
+
+		local json = result and type(result.stdout) == 'string' and result.stdout or ''
+		local data = utils.parse_json(json)
+		if not data then
+			callback('Ziggy response error. Couldn\'t parse json: ' .. json, {})
+		elseif data.error then
+			callback('Ziggy error: ' .. data.message, {})
+		else
+			return callback(nil, data)
+		end
+	end)
+
+	return function()
+		mp.abort_async_command(abort_signal)
+	end
+end
+
+---@return string|nil
+function get_clipboard()
+	local err, data = call_ziggy({'get-clipboard'})
+	if err then
+		mp.commandv('show-text', 'Get clipboard error. See console for details.')
+		msg.error(err)
+	end
+	return data and data.payload
+end
+
+---@param payload any
+---@return string|nil payload String that was copied to clipboard.
+function set_clipboard(payload)
+	payload = tostring(payload)
+	local err, data = call_ziggy({'set-clipboard', payload})
+	if err then
+		mp.commandv('show-text', 'Set clipboard error. See console for details.')
+		msg.error(err)
+	else
+		mp.commandv('show-text', t('Copied to clipboard') .. ': ' .. payload, 3000)
+	end
+	return data and data.payload
 end
 
 --[[ RENDERING ]]
