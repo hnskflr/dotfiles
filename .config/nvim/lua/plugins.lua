@@ -34,21 +34,14 @@ local plugin_specs = {
         config = function()
             require("config.nvim-lspconfig")
         end,
-        -- opts = {
-        --     servers = {
-        --         dartls = {},
-        --     },
-        -- },
-
     },
     {
         "mason-org/mason-lspconfig.nvim",
+        opts = {},
         dependencies = {
-            { "williamboman/mason.nvim", },
+            { "mason-org/mason.nvim", opts = {} },
+            "neovim/nvim-lspconfig",
         },
-        config = function()
-            require("config.mason-lspconfig")
-        end,
     },
 
     -- {

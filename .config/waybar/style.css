@@ -30,16 +30,16 @@ button:hover {
 }
 
 #workspaces button {
-    padding: 0 5px;
+    padding: 0 2px;
     background-color: transparent;
     color: @foreground;
-    border-top: 2px solid transparent;
+    /* border-top: 2px solid transparent; */
 }
 
-#workspaces button.focused {
-    color: #c9545d;
-    border-top: 2px solid #c9545d;
-}
+/* #workspaces button.focused { */
+    /* color: #c9545d; */
+    /* border-top: 2px solid #c9545d; */
+/* } */
 
 #workspaces button.active {
     color: @yellow;

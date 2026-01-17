@@ -27,66 +27,94 @@ badd +196 /usr/lib/flutter/packages/flutter/lib/src/material/app_bar.dart
 badd +26 lib/views/game/screens/select_mode_screen.dart
 badd +37 term://~/.local/share/nvim/lazy/coq_nvim//87752:/sbin/python3
 badd +11 lib/models/game.dart
-badd +75 lib/views/buzzer/screens/init_screen.dart
+badd +89 lib/views/buzzer/screens/init_screen.dart
 badd +14 lib/models/season.dart
-badd +45 lib/views/buzzer/game_view.dart
 badd +1 lib/main.dart
 badd +103 lib/providers/buzzer_provider.dart
-badd +34 lib/views/home/screens/home_screen.dart
-badd +85 lib/views/buzzer/screens/select_mode_screen.dart
 badd +51 lib/views/buzzer/screens/create_player_screen.dart
 badd +445 /usr/lib/flutter/bin/cache/pkg/sky_engine/lib/core/list.dart
 badd +90 lib/providers/game_provider.dart
+badd +119 lib/views/buzzer/screens/select_mode_screen.dart
+badd +56 lib/views/bootcamp/screens/bootcamp_screen.dart
+badd +15 lib/models/move.dart
 argglobal
 %argdel
 $argadd lib/main.dart
 set stal=2
 tabnew +setlocal\ bufhidden=wipe
 tabnew +setlocal\ bufhidden=wipe
-tabnew +setlocal\ bufhidden=wipe
 tabrewind
-edit lib/views/buzzer/screens/select_mode_screen.dart
+edit lib/views/bootcamp/screens
+let s:save_splitbelow = &splitbelow
+let s:save_splitright = &splitright
+set splitbelow splitright
+wincmd _ | wincmd |
+vsplit
+1wincmd h
+wincmd w
+let &splitbelow = s:save_splitbelow
+let &splitright = s:save_splitright
+wincmd t
+let s:save_winminheight = &winminheight
+let s:save_winminwidth = &winminwidth
+set winminheight=0
+set winheight=1
+set winminwidth=0
+set winwidth=1
+exe 'vert 1resize ' . ((&columns * 62 + 104) / 208)
+exe 'vert 2resize ' . ((&columns * 145 + 104) / 208)
 argglobal
-balt lib/models/season.dart
 setlocal foldmethod=indent
 setlocal foldexpr=0
 setlocal foldmarker={{{,}}}
 setlocal foldignore=#
-setlocal foldlevel=9
+setlocal foldlevel=0
 setlocal foldminlines=1
 setlocal foldnestmax=20
 setlocal foldenable
-31
-sil! normal! zo
-45
-sil! normal! zo
-50
-sil! normal! zo
-70
-sil! normal! zo
-73
-sil! normal! zo
-102
-sil! normal! zo
-117
-sil! normal! zo
-120
-sil! normal! zo
-139
-sil! normal! zo
-141
-sil! normal! zo
-152
-sil! normal! zo
-let s:l = 83 - ((41 * winheight(0) + 22) / 45)
+let s:l = 1 - ((0 * winheight(0) + 22) / 45)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 83
-normal! 022|
-lcd ~/projects/android/pocket_ninja/lib/providers
+keepjumps 1
+normal! 0
+lcd ~/projects/android/pocket_ninja
+wincmd w
+argglobal
+if bufexists(fnamemodify("~/projects/android/pocket_ninja/lib/views/buzzer/screens/select_mode_screen.dart", ":p")) | buffer ~/projects/android/pocket_ninja/lib/views/buzzer/screens/select_mode_screen.dart | else | edit ~/projects/android/pocket_ninja/lib/views/buzzer/screens/select_mode_screen.dart | endif
+if &buftype ==# 'terminal'
+  silent file ~/projects/android/pocket_ninja/lib/views/buzzer/screens/select_mode_screen.dart
+endif
+balt ~/projects/android/pocket_ninja/lib/views/buzzer/screens/init_screen.dart
+setlocal foldmethod=indent
+setlocal foldexpr=0
+setlocal foldmarker={{{,}}}
+setlocal foldignore=#
+setlocal foldlevel=6
+setlocal foldminlines=1
+setlocal foldnestmax=20
+setlocal foldenable
+41
+sil! normal! zo
+113
+sil! normal! zo
+119
+sil! normal! zo
+133
+sil! normal! zo
+151
+sil! normal! zo
+let s:l = 121 - ((10 * winheight(0) + 22) / 45)
+if s:l < 1 | let s:l = 1 | endif
+keepjumps exe s:l
+normal! zt
+keepjumps 121
+normal! 027|
+wincmd w
+exe 'vert 1resize ' . ((&columns * 62 + 104) / 208)
+exe 'vert 2resize ' . ((&columns * 145 + 104) / 208)
 tabnext
-edit ~/projects/android/pocket_ninja/lib/views/home/screens/home_screen.dart
+edit ~/projects/android/pocket_ninja/lib/views/bootcamp/screens/bootcamp_screen.dart
 argglobal
 setlocal foldmethod=indent
 setlocal foldexpr=0
@@ -96,62 +124,56 @@ setlocal foldlevel=5
 setlocal foldminlines=1
 setlocal foldnestmax=20
 setlocal foldenable
-12
-sil! normal! zo
-14
-sil! normal! zo
-17
-sil! normal! zo
-let s:l = 34 - ((33 * winheight(0) + 22) / 45)
-if s:l < 1 | let s:l = 1 | endif
-keepjumps exe s:l
-normal! zt
-keepjumps 34
-normal! 068|
-lcd ~/projects/android/pocket_ninja/lib/views/home/screens
-tabnext
-edit ~/projects/android/pocket_ninja/lib/views/buzzer/game_view.dart
-argglobal
-setlocal foldmethod=indent
-setlocal foldexpr=0
-setlocal foldmarker={{{,}}}
-setlocal foldignore=#
-setlocal foldlevel=4
-setlocal foldminlines=1
-setlocal foldnestmax=20
-setlocal foldenable
-25
-sil! normal! zo
-27
-sil! normal! zo
-let s:l = 1 - ((0 * winheight(0) + 22) / 45)
-if s:l < 1 | let s:l = 1 | endif
-keepjumps exe s:l
-normal! zt
-keepjumps 1
-normal! 039|
-lcd ~/projects/android/pocket_ninja/lib/views/buzzer
-tabnext
-edit ~/projects/android/pocket_ninja/lib/views/buzzer/screens/init_screen.dart
-argglobal
-setlocal foldmethod=indent
-setlocal foldexpr=0
-setlocal foldmarker={{{,}}}
-setlocal foldignore=#
-setlocal foldlevel=7
-setlocal foldminlines=1
-setlocal foldnestmax=20
-setlocal foldenable
 29
 sil! normal! zo
-let s:l = 57 - ((15 * winheight(0) + 22) / 45)
+33
+sil! normal! zo
+35
+sil! normal! zo
+37
+sil! normal! zo
+40
+sil! normal! zo
+43
+sil! normal! zo
+63
+sil! normal! zo
+65
+sil! normal! zo
+68
+sil! normal! zo
+let s:l = 42 - ((41 * winheight(0) + 22) / 45)
 if s:l < 1 | let s:l = 1 | endif
 keepjumps exe s:l
 normal! zt
-keepjumps 57
-normal! 0
-lcd ~/projects/android/pocket_ninja/lib/views/buzzer/screens
-tabnext 1
+keepjumps 42
+normal! 011|
+lcd ~/projects/android/pocket_ninja
+tabnext
+edit ~/projects/android/pocket_ninja/lib/models/move.dart
+argglobal
+setlocal foldmethod=indent
+setlocal foldexpr=0
+setlocal foldmarker={{{,}}}
+setlocal foldignore=#
+setlocal foldlevel=1
+setlocal foldminlines=1
+setlocal foldnestmax=20
+setlocal foldenable
+10
+sil! normal! zo
+11
+sil! normal! zo
+15
+sil! normal! zo
+let s:l = 14 - ((13 * winheight(0) + 22) / 45)
+if s:l < 1 | let s:l = 1 | endif
+keepjumps exe s:l
+normal! zt
+keepjumps 14
+normal! 017|
+lcd ~/projects/android/pocket_ninja
+tabnext 3
 set stal=1
 if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0 && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'
   silent exe 'bwipe ' . s:wipebuf

@@ -14,6 +14,8 @@ require("mason-lspconfig").setup()
 vim.o.updatetime = 250
 vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
 
-require("lspconfig").dartls.setup({
+
+vim.lsp.config("dartls", {
     cmd = { "dart", "language-server", "--protocol=lsp" },
-})
+    filetypes = { "dart" },
+});

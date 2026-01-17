@@ -76,8 +76,6 @@ set nocp
 filetype plugin on
 syntax on
 
-set foldmethod=indent
-
 " netrw
 function! NetrwMapping()
   nmap <buffer> H u 
@@ -93,7 +91,7 @@ augroup netrw_mapping
   autocmd filetype netrw call NetrwMapping()
 augroup END
 
-let g:netrw_keepdir = 0
+" let g:netrw_keepdir = 0
 let g:netrw_winsize = 30
 let g:netrw_banner = 0
 let g:netrw_list_hide = '\(^\|\s\s\)\zs\.\S\+'
