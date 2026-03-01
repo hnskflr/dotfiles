@@ -89,7 +89,6 @@ local plugin_specs = {
             require("config.conform")
         end,
     },
-    { "wakatime/vim-wakatime", lazy = false },
     {
         "iamcco/markdown-preview.nvim",
         cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
